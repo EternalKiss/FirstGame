@@ -5,7 +5,7 @@ public class Mover : MonoBehaviour, IMovable
     private CharacterController _controller;
     private float _verticalVelocity;
 
-    private const float GroundedGravity = -2f;
+    private float _groundedGravity = -2f;
 
     private void Awake()
     {
@@ -16,7 +16,7 @@ public class Mover : MonoBehaviour, IMovable
     {
         if (_controller.isGrounded)
         {
-            _verticalVelocity = GroundedGravity;
+            _verticalVelocity = _groundedGravity;
         }
         else
         {
