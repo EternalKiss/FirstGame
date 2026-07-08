@@ -18,6 +18,12 @@ public class Player : MonoBehaviour
         Vector3 moveDirection = new Vector3(input.x, 0f, input.y);
         Vector3 finalVelocity = Vector3.ClampMagnitude(moveDirection, 1f) * _moveSpeed;
 
-        _movable?.Move(finalVelocity);
+        Rotate(moveDirection);
+        _movable.Move(finalVelocity);
+    }
+
+    private void Rotate(Vector3 direction)
+    {
+        _rotatable.Rotate(direction);
     }
 }
