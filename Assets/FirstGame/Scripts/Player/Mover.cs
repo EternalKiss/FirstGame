@@ -1,29 +1,33 @@
 using UnityEngine;
+using FirstGame.Interfaces;
 
-public class Mover : MonoBehaviour, IMovable
+namespace FirstGame.Player
 {
-    private CharacterController _controller;
-    private float _verticalVelocity;
-
-    private float _groundedGravity = -2f;
-
-    private void Awake()
+    public class Mover : MonoBehaviour, IMovable
     {
-        _controller = GetComponent<CharacterController>();
-    }
+        private CharacterController _controller;
+        private float _verticalVelocity;
 
-    public void Move(Vector3 motionVector)
-    {
-        if (_controller.isGrounded)
+        private float _groundedGravity = -2f;
+
+        private void Awake()
         {
-            _verticalVelocity = _groundedGravity;
-        }
-        else
-        {
-            _verticalVelocity += Physics.gravity.y * Time.deltaTime;
+            _controller = GetComponent<CharacterController>();
         }
 
-        motionVector.y = _verticalVelocity;
-        _controller.Move(motionVector * Time.deltaTime);
+        public void Move(Vector3 motionVector)
+        {
+            if (_controller.isGrounded)
+            {
+                _verticalVelocity = _groundedGravity;
+            }
+            else
+            {
+                _verticalVelocity += Physics.gravity.y * Time.deltaTime;
+            }
+
+            motionVector.y = _verticalVelocity;
+            _controller.Move(motionVector * Time.deltaTime);
+        }
     }
 }

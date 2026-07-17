@@ -15,76 +15,78 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-/// <summary>
-/// Provides programmatic access to <see cref="InputActionAsset" />, <see cref="InputActionMap" />, <see cref="InputAction" /> and <see cref="InputControlScheme" /> instances defined in asset "Assets/FirstGame/Scripts/Player/Input/PlayerInput.inputactions".
-/// </summary>
-/// <remarks>
-/// This class is source generated and any manual edits will be discarded if the associated asset is reimported or modified.
-/// </remarks>
-/// <example>
-/// <code>
-/// using namespace UnityEngine;
-/// using UnityEngine.InputSystem;
-///
-/// // Example of using an InputActionMap named "Player" from a UnityEngine.MonoBehaviour implementing callback interface.
-/// public class Example : MonoBehaviour, MyActions.IPlayerActions
-/// {
-///     private MyActions_Actions m_Actions;                  // Source code representation of asset.
-///     private MyActions_Actions.PlayerActions m_Player;     // Source code representation of action map.
-///
-///     void Awake()
-///     {
-///         m_Actions = new MyActions_Actions();              // Create asset object.
-///         m_Player = m_Actions.Player;                      // Extract action map object.
-///         m_Player.AddCallbacks(this);                      // Register callback interface IPlayerActions.
-///     }
-///
-///     void OnDestroy()
-///     {
-///         m_Actions.Dispose();                              // Destroy asset object.
-///     }
-///
-///     void OnEnable()
-///     {
-///         m_Player.Enable();                                // Enable all actions within map.
-///     }
-///
-///     void OnDisable()
-///     {
-///         m_Player.Disable();                               // Disable all actions within map.
-///     }
-///
-///     #region Interface implementation of MyActions.IPlayerActions
-///
-///     // Invoked when "Move" action is either started, performed or canceled.
-///     public void OnMove(InputAction.CallbackContext context)
-///     {
-///         Debug.Log($"OnMove: {context.ReadValue&lt;Vector2&gt;()}");
-///     }
-///
-///     // Invoked when "Attack" action is either started, performed or canceled.
-///     public void OnAttack(InputAction.CallbackContext context)
-///     {
-///         Debug.Log($"OnAttack: {context.ReadValue&lt;float&gt;()}");
-///     }
-///
-///     #endregion
-/// }
-/// </code>
-/// </example>
-public partial class @PlayerInput: IInputActionCollection2, IDisposable
+namespace FirstGame.Player.Input
 {
     /// <summary>
-    /// Provides access to the underlying asset instance.
+    /// Provides programmatic access to <see cref="InputActionAsset" />, <see cref="InputActionMap" />, <see cref="InputAction" /> and <see cref="InputControlScheme" /> instances defined in asset "Assets/FirstGame/Scripts/Player/Input/PlayerInput.inputactions".
     /// </summary>
-    public InputActionAsset asset { get; }
-
-    /// <summary>
-    /// Constructs a new instance.
-    /// </summary>
-    public @PlayerInput()
+    /// <remarks>
+    /// This class is source generated and any manual edits will be discarded if the associated asset is reimported or modified.
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// using namespace UnityEngine;
+    /// using UnityEngine.InputSystem;
+    ///
+    /// // Example of using an InputActionMap named "Player" from a UnityEngine.MonoBehaviour implementing callback interface.
+    /// public class Example : MonoBehaviour, MyActions.IPlayerActions
+    /// {
+    ///     private MyActions_Actions m_Actions;                  // Source code representation of asset.
+    ///     private MyActions_Actions.PlayerActions m_Player;     // Source code representation of action map.
+    ///
+    ///     void Awake()
+    ///     {
+    ///         m_Actions = new MyActions_Actions();              // Create asset object.
+    ///         m_Player = m_Actions.Player;                      // Extract action map object.
+    ///         m_Player.AddCallbacks(this);                      // Register callback interface IPlayerActions.
+    ///     }
+    ///
+    ///     void OnDestroy()
+    ///     {
+    ///         m_Actions.Dispose();                              // Destroy asset object.
+    ///     }
+    ///
+    ///     void OnEnable()
+    ///     {
+    ///         m_Player.Enable();                                // Enable all actions within map.
+    ///     }
+    ///
+    ///     void OnDisable()
+    ///     {
+    ///         m_Player.Disable();                               // Disable all actions within map.
+    ///     }
+    ///
+    ///     #region Interface implementation of MyActions.IPlayerActions
+    ///
+    ///     // Invoked when "Move" action is either started, performed or canceled.
+    ///     public void OnMove(InputAction.CallbackContext context)
+    ///     {
+    ///         Debug.Log($"OnMove: {context.ReadValue&lt;Vector2&gt;()}");
+    ///     }
+    ///
+    ///     // Invoked when "Attack" action is either started, performed or canceled.
+    ///     public void OnAttack(InputAction.CallbackContext context)
+    ///     {
+    ///         Debug.Log($"OnAttack: {context.ReadValue&lt;float&gt;()}");
+    ///     }
+    ///
+    ///     #endregion
+    /// }
+    /// </code>
+    /// </example>
+    public partial class @PlayerInput: IInputActionCollection2, IDisposable
     {
-        asset = InputActionAsset.FromJson(@"{
+        /// <summary>
+        /// Provides access to the underlying asset instance.
+        /// </summary>
+        public InputActionAsset asset { get; }
+
+        /// <summary>
+        /// Constructs a new instance.
+        /// </summary>
+        public @PlayerInput()
+        {
+            asset = InputActionAsset.FromJson(@"{
     ""version"": 1,
     ""name"": ""PlayerInput"",
     ""maps"": [
@@ -197,220 +199,221 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         }
     ]
 }");
+            // Game
+            m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
+            m_Game_Move = m_Game.FindAction("Move", throwIfNotFound: true);
+        }
+
+        ~@PlayerInput()
+        {
+            UnityEngine.Debug.Assert(!m_Game.enabled, "This will cause a leak and performance issues, PlayerInput.Game.Disable() has not been called.");
+        }
+
+        /// <summary>
+        /// Destroys this asset and all associated <see cref="InputAction"/> instances.
+        /// </summary>
+        public void Dispose()
+        {
+            UnityEngine.Object.Destroy(asset);
+        }
+
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.bindingMask" />
+        public InputBinding? bindingMask
+        {
+            get => asset.bindingMask;
+            set => asset.bindingMask = value;
+        }
+
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.devices" />
+        public ReadOnlyArray<InputDevice>? devices
+        {
+            get => asset.devices;
+            set => asset.devices = value;
+        }
+
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.controlSchemes" />
+        public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
+
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.Contains(InputAction)" />
+        public bool Contains(InputAction action)
+        {
+            return asset.Contains(action);
+        }
+
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.GetEnumerator()" />
+        public IEnumerator<InputAction> GetEnumerator()
+        {
+            return asset.GetEnumerator();
+        }
+
+        /// <inheritdoc cref="IEnumerable.GetEnumerator()" />
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.Enable()" />
+        public void Enable()
+        {
+            asset.Enable();
+        }
+
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.Disable()" />
+        public void Disable()
+        {
+            asset.Disable();
+        }
+
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.bindings" />
+        public IEnumerable<InputBinding> bindings => asset.bindings;
+
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.FindAction(string, bool)" />
+        public InputAction FindAction(string actionNameOrId, bool throwIfNotFound = false)
+        {
+            return asset.FindAction(actionNameOrId, throwIfNotFound);
+        }
+
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.FindBinding(InputBinding, out InputAction)" />
+        public int FindBinding(InputBinding bindingMask, out InputAction action)
+        {
+            return asset.FindBinding(bindingMask, out action);
+        }
+
         // Game
-        m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
-        m_Game_Move = m_Game.FindAction("Move", throwIfNotFound: true);
-    }
-
-    ~@PlayerInput()
-    {
-        UnityEngine.Debug.Assert(!m_Game.enabled, "This will cause a leak and performance issues, PlayerInput.Game.Disable() has not been called.");
-    }
-
-    /// <summary>
-    /// Destroys this asset and all associated <see cref="InputAction"/> instances.
-    /// </summary>
-    public void Dispose()
-    {
-        UnityEngine.Object.Destroy(asset);
-    }
-
-    /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.bindingMask" />
-    public InputBinding? bindingMask
-    {
-        get => asset.bindingMask;
-        set => asset.bindingMask = value;
-    }
-
-    /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.devices" />
-    public ReadOnlyArray<InputDevice>? devices
-    {
-        get => asset.devices;
-        set => asset.devices = value;
-    }
-
-    /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.controlSchemes" />
-    public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
-
-    /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.Contains(InputAction)" />
-    public bool Contains(InputAction action)
-    {
-        return asset.Contains(action);
-    }
-
-    /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.GetEnumerator()" />
-    public IEnumerator<InputAction> GetEnumerator()
-    {
-        return asset.GetEnumerator();
-    }
-
-    /// <inheritdoc cref="IEnumerable.GetEnumerator()" />
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
-
-    /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.Enable()" />
-    public void Enable()
-    {
-        asset.Enable();
-    }
-
-    /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.Disable()" />
-    public void Disable()
-    {
-        asset.Disable();
-    }
-
-    /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.bindings" />
-    public IEnumerable<InputBinding> bindings => asset.bindings;
-
-    /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.FindAction(string, bool)" />
-    public InputAction FindAction(string actionNameOrId, bool throwIfNotFound = false)
-    {
-        return asset.FindAction(actionNameOrId, throwIfNotFound);
-    }
-
-    /// <inheritdoc cref="UnityEngine.InputSystem.InputActionAsset.FindBinding(InputBinding, out InputAction)" />
-    public int FindBinding(InputBinding bindingMask, out InputAction action)
-    {
-        return asset.FindBinding(bindingMask, out action);
-    }
-
-    // Game
-    private readonly InputActionMap m_Game;
-    private List<IGameActions> m_GameActionsCallbackInterfaces = new List<IGameActions>();
-    private readonly InputAction m_Game_Move;
-    /// <summary>
-    /// Provides access to input actions defined in input action map "Game".
-    /// </summary>
-    public struct GameActions
-    {
-        private @PlayerInput m_Wrapper;
-
+        private readonly InputActionMap m_Game;
+        private List<IGameActions> m_GameActionsCallbackInterfaces = new List<IGameActions>();
+        private readonly InputAction m_Game_Move;
         /// <summary>
-        /// Construct a new instance of the input action map wrapper class.
+        /// Provides access to input actions defined in input action map "Game".
         /// </summary>
-        public GameActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-        /// <summary>
-        /// Provides access to the underlying input action "Game/Move".
-        /// </summary>
-        public InputAction @Move => m_Wrapper.m_Game_Move;
-        /// <summary>
-        /// Provides access to the underlying input action map instance.
-        /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Game; }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
-        public void Enable() { Get().Enable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
-        public void Disable() { Get().Disable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
-        public bool enabled => Get().enabled;
-        /// <summary>
-        /// Implicitly converts an <see ref="GameActions" /> to an <see ref="InputActionMap" /> instance.
-        /// </summary>
-        public static implicit operator InputActionMap(GameActions set) { return set.Get(); }
-        /// <summary>
-        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <param name="instance">Callback instance.</param>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
-        /// </remarks>
-        /// <seealso cref="GameActions" />
-        public void AddCallbacks(IGameActions instance)
+        public struct GameActions
         {
-            if (instance == null || m_Wrapper.m_GameActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_GameActionsCallbackInterfaces.Add(instance);
-            @Move.started += instance.OnMove;
-            @Move.performed += instance.OnMove;
-            @Move.canceled += instance.OnMove;
-        }
+            private @PlayerInput m_Wrapper;
 
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public GameActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "Game/Move".
+            /// </summary>
+            public InputAction @Move => m_Wrapper.m_Game_Move;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_Game; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="GameActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(GameActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="GameActions" />
+            public void AddCallbacks(IGameActions instance)
+            {
+                if (instance == null || m_Wrapper.m_GameActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_GameActionsCallbackInterfaces.Add(instance);
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="GameActions" />
+            private void UnregisterCallbacks(IGameActions instance)
+            {
+                @Move.started -= instance.OnMove;
+                @Move.performed -= instance.OnMove;
+                @Move.canceled -= instance.OnMove;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="GameActions.UnregisterCallbacks(IGameActions)" />.
+            /// </summary>
+            /// <seealso cref="GameActions.UnregisterCallbacks(IGameActions)" />
+            public void RemoveCallbacks(IGameActions instance)
+            {
+                if (m_Wrapper.m_GameActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="GameActions.AddCallbacks(IGameActions)" />
+            /// <seealso cref="GameActions.RemoveCallbacks(IGameActions)" />
+            /// <seealso cref="GameActions.UnregisterCallbacks(IGameActions)" />
+            public void SetCallbacks(IGameActions instance)
+            {
+                foreach (var item in m_Wrapper.m_GameActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_GameActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
         /// <summary>
-        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// Provides a new <see cref="GameActions" /> instance referencing this action map.
         /// </summary>
-        /// <remarks>
-        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
-        /// </remarks>
-        /// <seealso cref="GameActions" />
-        private void UnregisterCallbacks(IGameActions instance)
+        public GameActions @Game => new GameActions(this);
+        private int m_KeyboardSchemeIndex = -1;
+        /// <summary>
+        /// Provides access to the input control scheme.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputControlScheme" />
+        public InputControlScheme KeyboardScheme
         {
-            @Move.started -= instance.OnMove;
-            @Move.performed -= instance.OnMove;
-            @Move.canceled -= instance.OnMove;
+            get
+            {
+                if (m_KeyboardSchemeIndex == -1) m_KeyboardSchemeIndex = asset.FindControlSchemeIndex("Keyboard");
+                return asset.controlSchemes[m_KeyboardSchemeIndex];
+            }
         }
-
+        private int m_MobileSchemeIndex = -1;
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="GameActions.UnregisterCallbacks(IGameActions)" />.
+        /// Provides access to the input control scheme.
         /// </summary>
-        /// <seealso cref="GameActions.UnregisterCallbacks(IGameActions)" />
-        public void RemoveCallbacks(IGameActions instance)
+        /// <seealso cref="UnityEngine.InputSystem.InputControlScheme" />
+        public InputControlScheme MobileScheme
         {
-            if (m_Wrapper.m_GameActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
+            get
+            {
+                if (m_MobileSchemeIndex == -1) m_MobileSchemeIndex = asset.FindControlSchemeIndex("Mobile");
+                return asset.controlSchemes[m_MobileSchemeIndex];
+            }
         }
-
         /// <summary>
-        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Game" which allows adding and removing callbacks.
         /// </summary>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
-        /// </remarks>
         /// <seealso cref="GameActions.AddCallbacks(IGameActions)" />
         /// <seealso cref="GameActions.RemoveCallbacks(IGameActions)" />
-        /// <seealso cref="GameActions.UnregisterCallbacks(IGameActions)" />
-        public void SetCallbacks(IGameActions instance)
+        public interface IGameActions
         {
-            foreach (var item in m_Wrapper.m_GameActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_GameActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
+            /// <summary>
+            /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnMove(InputAction.CallbackContext context);
         }
-    }
-    /// <summary>
-    /// Provides a new <see cref="GameActions" /> instance referencing this action map.
-    /// </summary>
-    public GameActions @Game => new GameActions(this);
-    private int m_KeyboardSchemeIndex = -1;
-    /// <summary>
-    /// Provides access to the input control scheme.
-    /// </summary>
-    /// <seealso cref="UnityEngine.InputSystem.InputControlScheme" />
-    public InputControlScheme KeyboardScheme
-    {
-        get
-        {
-            if (m_KeyboardSchemeIndex == -1) m_KeyboardSchemeIndex = asset.FindControlSchemeIndex("Keyboard");
-            return asset.controlSchemes[m_KeyboardSchemeIndex];
-        }
-    }
-    private int m_MobileSchemeIndex = -1;
-    /// <summary>
-    /// Provides access to the input control scheme.
-    /// </summary>
-    /// <seealso cref="UnityEngine.InputSystem.InputControlScheme" />
-    public InputControlScheme MobileScheme
-    {
-        get
-        {
-            if (m_MobileSchemeIndex == -1) m_MobileSchemeIndex = asset.FindControlSchemeIndex("Mobile");
-            return asset.controlSchemes[m_MobileSchemeIndex];
-        }
-    }
-    /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Game" which allows adding and removing callbacks.
-    /// </summary>
-    /// <seealso cref="GameActions.AddCallbacks(IGameActions)" />
-    /// <seealso cref="GameActions.RemoveCallbacks(IGameActions)" />
-    public interface IGameActions
-    {
-        /// <summary>
-        /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMove(InputAction.CallbackContext context);
     }
 }

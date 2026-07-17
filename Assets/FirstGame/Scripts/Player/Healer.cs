@@ -1,18 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class Healer : MonoBehaviour
+namespace FirstGame.Player
 {
-    // Start is called before the first frame update
-    void Start()
+    public class Healer : MonoBehaviour
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public Action<float> Healed { get; internal set; }
     }
 }

@@ -1,9 +1,14 @@
 using UnityEngine;
+using FirstGame.Interfaces;
 
-public class Enemy : MonoBehaviour, IDamageable
+namespace FirstGame.Enemy
 {
-    public void TakeDamage()
+    public class Enemy : MonoBehaviour, IDamageable
     {
-        throw new System.NotImplementedException();
+        public void TakeDamage(float damage)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
+    

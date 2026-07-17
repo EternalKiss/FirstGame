@@ -1,19 +1,23 @@
+using FirstGame.Interfaces;
 using UnityEngine;
 
-public class Rotator : MonoBehaviour, IRotatable
+namespace FirstGame.Player
 {
-    private float _rotationSpeed = 720f;
-
-    public void Rotate(Vector3 direction)
+    public class Rotator : MonoBehaviour, IRotatable
     {
-        if (direction.sqrMagnitude < 0.001f) return;
+        private float _rotationSpeed = 720f;
 
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        public void Rotate(Vector3 direction)
+        {
+            if (direction.sqrMagnitude < 0.001f) return;
 
-        transform.rotation = Quaternion.RotateTowards(
-            transform.rotation,
-            targetRotation,
-            _rotationSpeed * Time.deltaTime
-        );
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                targetRotation,
+                _rotationSpeed * Time.deltaTime
+            );
+        }
     }
 }

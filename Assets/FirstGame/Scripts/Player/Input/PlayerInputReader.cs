@@ -1,4 +1,6 @@
 using UnityEngine;
+using FirstGame.Player;
+using FirstGame.Player.Input;
 
 public class PlayerInputReader : MonoBehaviour
 {
