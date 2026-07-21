@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace FirstGame.Player
+namespace FirstGame.Players
 {
     public class Healer : MonoBehaviour
     {

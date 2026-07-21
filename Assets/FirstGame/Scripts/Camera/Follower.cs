@@ -1,31 +1,39 @@
 using UnityEngine;
+using FirstGame.Players;
 
-public class Follower : MonoBehaviour
+namespace FirstGame.Camera
 {
-    [SerializeField] private Transform _target;
-    [SerializeField] private Vector3 _offset = new Vector3(0,15f, -10f);
-
-    [SerializeField] private bool _smoothing;
-    [SerializeField] private float _smoothTime = 0.2f;
-
-    private Vector3 _velocity;
-
-    private void Start()
+    public class Follower : MonoBehaviour
     {
-        if (_target == null) return;
-    }
-     
-    private void LateUpdate()
-    {
-        Vector3 desired = _target.position + _offset;
+        [SerializeField] private Vector3 _offset = new Vector3(0, 15f, -10f);
 
-        if(_smoothing == false)
+        [SerializeField] private bool _smoothing;
+        [SerializeField] private float _smoothTime = 0.2f;
+
+        private Transform _target;
+        private Vector3 _velocity;
+
+        public void Initialize(Player player)
         {
-            transform.position = desired;
-            _velocity = Vector3.zero;
-            return;
+            _target = player.transform;
+
+            if (_target == null) return;
         }
 
-        transform.position = Vector3.SmoothDamp(transform.position, desired, ref _velocity, _smoothTime);
+        private void LateUpdate()
+        {
+            if (_target == null) return;
+
+            Vector3 desired = _target.position + _offset;
+
+            if (_smoothing == false)
+            {
+                transform.position = desired;
+                _velocity = Vector3.zero;
+                return;
+            }
+
+            transform.position = Vector3.SmoothDamp(transform.position, desired, ref _velocity, _smoothTime);
+        }
     }
 }

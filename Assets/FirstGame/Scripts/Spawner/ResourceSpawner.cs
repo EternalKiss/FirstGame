@@ -21,15 +21,6 @@ namespace FirstGame.Spawner
         protected override void InitializeSpawnedObject(Resource resource)
         {
             resource.Initialize(_startHealth);
-
-            resource.OnDestroy += OnResourceDead;
-        }
-
-        private void OnResourceDead(Resource resource)
-        {
-            resource.OnDestroy -= OnResourceDead;
-
-            ReturnToPool(resource);
         }
     }
 }

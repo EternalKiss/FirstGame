@@ -1,60 +1,71 @@
-using FirstGame.Environment;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
 namespace FirstGame.ObjectPool
 {
-    public class GameObjectPool<T> : MonoBehaviour where T : Component
+    public class GameObjectPool<T> : MonoBehaviour where T : Component, IDestructible
     {
-        [SerializeField] private Resource _prefab;
+        [SerializeField] private T _prefab;
         [SerializeField] private int _defaultCapacity = 10;
         [SerializeField] private int _maxPoolSize = 20;
 
-        private ObjectPool<Resource> _pool;
+        private ObjectPool<T> _pool;
+        private WaitForSeconds _waitReleaseDelay;
 
         private void Awake()
         {
-            _pool = new ObjectPool<Resource>(
+            _pool = new ObjectPool<T>(
                 createFunc: OnCreateObject,
                 actionOnGet: OnTakeFromPool,
                 actionOnRelease: OnReturnToPool,
                 actionOnDestroy: OnDestroyObject,
-                collectionCheck: false,
+                collectionCheck: true,
                 defaultCapacity: _defaultCapacity,
                 maxSize: _maxPoolSize
             );
         }
 
-        private Resource OnCreateObject()
-        {
-            return Instantiate(_prefab, transform);
-        }
-
-        private void OnTakeFromPool(Resource resource)
-        {
-            resource.gameObject.SetActive(true);
-        }
-
-        private void OnReturnToPool(Resource resource)
-        {
-            resource.gameObject.SetActive(false);
-        }
-
-        private void OnDestroyObject(Resource resource)
-        {
-            Destroy(resource);
-        }
-
-        public Resource Get()
+        public T Get()
         {
             return _pool.Get();
         }
 
-        public void Release(Resource resource)
+        public void Release(T poolObject)
         {
-            _pool.Release(resource);
+            _pool.Release(poolObject);
+        }
+
+        private T OnCreateObject()
+        {
+            T poolObject = Instantiate(_prefab, transform);
+
+            poolObject.OnReadyToRelease += HandleObjectDeath;
+            return poolObject;
+        }
+
+        private void OnTakeFromPool(T poolObject)
+        {
+            poolObject.gameObject.SetActive(true);
+        }
+
+        private void OnReturnToPool(T poolObject)
+        {   
+            poolObject.gameObject.SetActive(false);
+        }
+
+        private void OnDestroyObject(T poolObject)
+        {
+            poolObject.OnReadyToRelease -= HandleObjectDeath;
+            Destroy(poolObject);
+        }
+
+        private void HandleObjectDeath(IDestructible destructible)
+        {
+            if (destructible is T obj)
+            {
+                Release(obj);
+            }
         }
     }
 }

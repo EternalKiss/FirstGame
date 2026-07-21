@@ -5,7 +5,7 @@ using System;
 
 namespace FirstGame.Environment
 {
-    public class Resource : MonoBehaviour, IDamageable
+    public class Resource : MonoBehaviour, IDamageable, IDestructible
     {
         private Health _health;
         private ResourceVisual _resourceVisual;
@@ -13,7 +13,7 @@ namespace FirstGame.Environment
         public Health GetHealthComponent() => _health;
         public bool IsAlive => _health.CheckValidHealth() > 0;
 
-        public event Action<Resource> OnDestroy;
+        public event Action<IDestructible> OnReadyToRelease;
 
         public void Initialize(float startHealth)
         {
@@ -30,7 +30,17 @@ namespace FirstGame.Environment
         {
             _health.TakeDamage(damage);
 
+            if(_health.CurrentHealth <= 0)
+            {
+                Die();
+            }
+
             Debug.Log($"Получил урон. Мое здоровье {_health.CurrentHealth}");
+        }
+
+        private void Die()
+        {
+            OnReadyToRelease?.Invoke(this);
         }
     }
 }

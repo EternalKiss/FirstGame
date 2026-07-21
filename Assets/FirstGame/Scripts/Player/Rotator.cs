@@ -1,7 +1,7 @@
 using FirstGame.Interfaces;
 using UnityEngine;
 
-namespace FirstGame.Player
+namespace FirstGame.Players
 {
     public class Rotator : MonoBehaviour, IRotatable
     {

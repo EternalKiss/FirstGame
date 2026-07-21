@@ -1,7 +1,7 @@
 using UnityEngine;
 using FirstGame.Interfaces;
 
-namespace FirstGame.Player
+namespace FirstGame.Players
 {
     public class Mover : MonoBehaviour, IMovable
     {

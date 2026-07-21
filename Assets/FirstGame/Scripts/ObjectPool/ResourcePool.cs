@@ -1,12 +1,7 @@
 using FirstGame.Environment;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using FirstGame.ObjectPool;
 
-namespace FirstGame.ObjectPool
+public class ResourcePool : GameObjectPool<Resource>
 {
-    public class ResourcePool : GameObjectPool<Resource>
-    {
-
-    }
+    
 }

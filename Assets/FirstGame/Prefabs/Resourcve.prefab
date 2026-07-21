@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 3189893157210352199}
   - component: {fileID: 4941045964770953184}
   - component: {fileID: 5149051485088279408}
-  m_Layer: 7
-  m_Name: Cube
+  m_Layer: 6
+  m_Name: Resourcve
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,7 +43,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4748618209901368856}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &4188504363237113733
 MeshRenderer:
   m_ObjectHideFlags: 0

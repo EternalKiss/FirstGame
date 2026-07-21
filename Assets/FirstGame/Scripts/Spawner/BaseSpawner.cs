@@ -1,10 +1,9 @@
-using FirstGame.Environment;
 using FirstGame.ObjectPool;
 using UnityEngine;
 
 namespace FirstGame.Spawner
 {
-    public abstract class BaseSpawner<T> : MonoBehaviour where T : Component
+    public abstract class BaseSpawner<T> : MonoBehaviour where T : Component, IDestructible
     {
         [SerializeField] private GameObjectPool<T> _objectPool;
         [SerializeField] private float _spawnInterval = 5f;
@@ -20,23 +19,33 @@ namespace FirstGame.Spawner
             }
         }
 
-        private void TrySpawn()
+        public void SpawnAtPosition(Vector3 position)
         {
-            Resource spawnedResource = _objectPool.Get();
+            T spawnedComponent = _objectPool.Get();
 
-            Vector3 spawnPosition = GetSpawnPosition();
-            spawnedResource.transform.position = spawnPosition;
-            spawnedResource.transform.rotation = Quaternion.identity;
+            spawnedComponent.transform.position = position;
+            spawnedComponent.transform.rotation = Quaternion.identity;
 
-            InitializeSpawnedObject(spawnedResource);
+            InitializeSpawnedObject(spawnedComponent);
         }
 
-        protected void ReturnToPool(Resource resource)
+        private void TrySpawn()
         {
-            _objectPool.Release(resource);
+            T spawnedComponent = _objectPool.Get();
+
+            Vector3 spawnPosition = GetSpawnPosition();
+            spawnedComponent.transform.position = spawnPosition;
+            spawnedComponent.transform.rotation = Quaternion.identity;
+
+            InitializeSpawnedObject(spawnedComponent);
+        }
+
+        protected void ReturnToPool(T spawnedComponent)
+        {
+            _objectPool.Release(spawnedComponent);
         }
 
         protected abstract Vector3 GetSpawnPosition();
-        protected abstract void InitializeSpawnedObject(Resource resource);
+        protected abstract void InitializeSpawnedObject(T spawnedComponent);
     }
 }

@@ -1,13 +1,79 @@
-using UnityEngine;
+using FirstGame.Combat;
+using FirstGame.Environment;
 using FirstGame.Interfaces;
+using System;
+using UnityEngine;
 
 namespace FirstGame.Enemy
 {
-    public class Enemy : MonoBehaviour, IDamageable
+    public class Enemy : MonoBehaviour, IDamageable, IDestructible
     {
+        private float _attackRange = 4f;
+        private float _damage = 15f;
+
+        private Health _health;
+        private Mover _mover;
+        private DamageDealer _damageDealer;
+        private PlayerDetector _playerDetector;
+
+        public Health GetHealthComponent() => _health;
+        public bool IsAlive => _health.CheckValidHealth() > 0;
+
+        public event Action<IDestructible> OnReadyToRelease;
+
+        private void Awake()
+        {
+            _damageDealer = GetComponent<DamageDealer>();
+            _playerDetector = GetComponent<PlayerDetector>();
+            _health = GetComponent<Health>();
+            _mover = GetComponent<Mover>();
+        }
+
+        private void Update()
+        {
+            if (_health == null || _playerDetector == null || _mover == null) return;
+
+            if (!IsAlive || !_playerDetector.HasTarget) return;
+
+            _mover.Move(_playerDetector.GetPlayerPosition(), _attackRange);
+
+            if (_mover.TargetReached)
+            {
+                TryAttack();
+            }
+        }
+
+        public void Initialize(float startHealth)
+        {
+            if (startHealth <= 0)
+                Debug.Log("Health is less or equal 0!");
+
+            _health.Initialize(startHealth);
+        }
+
         public void TakeDamage(float damage)
         {
-            throw new System.NotImplementedException();
+            _health.TakeDamage(damage);
+
+            if (_health.CurrentHealth <= 0)
+            {
+                Die();
+            }
+        }
+
+        public void Move(Vector3 target)
+        {
+            _mover.Move(target, _attackRange);
+        }
+
+        private void TryAttack()
+        {
+            _damageDealer.Attack(_playerDetector.PlayerDamageable, _damage);
+        }    
+
+        private void Die()
+        {
+            OnReadyToRelease?.Invoke(this);
         }
     }
 }
