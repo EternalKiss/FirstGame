@@ -6,16 +6,16 @@ namespace FirstGame.Spawner
     public abstract class BaseSpawner<T> : MonoBehaviour where T : Component, IDestructible
     {
         [SerializeField] private GameObjectPool<T> _objectPool;
-        [SerializeField] private float _spawnInterval = 5f;
 
-        private float _nextSpawnTime;
-
-        protected virtual void Update()
+        public void InitializePool()
         {
-            if (Time.time >= _nextSpawnTime)
+            if (_objectPool != null)
             {
-                _nextSpawnTime = Time.time + _spawnInterval;
-                TrySpawn();
+                _objectPool.Initialize();
+            }
+            else
+            {
+                Debug.LogError($"[BaseSpawner] Пул объектов не назначен на спавнере {name}!");
             }
         }
 
@@ -29,7 +29,7 @@ namespace FirstGame.Spawner
             InitializeSpawnedObject(spawnedComponent);
         }
 
-        private void TrySpawn()
+        protected virtual void TrySpawn()
         {
             T spawnedComponent = _objectPool.Get();
 

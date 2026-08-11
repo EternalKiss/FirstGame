@@ -12,6 +12,8 @@ namespace FirstGame.Players
         private IRotatable _rotatable;
         private TargetDetector _targetDetector;
         private Health _health;
+        private AnimationController _animationController;
+        private DamageDealer _damageDealer;
 
         private float _damage = 15f;
 
@@ -24,6 +26,8 @@ namespace FirstGame.Players
             _movable = GetComponent<IMovable>();
             _rotatable = GetComponent<IRotatable>();
             _targetDetector = GetComponent<TargetDetector>();
+            _animationController = GetComponentInChildren<AnimationController>();
+            _damageDealer = GetComponent<DamageDealer>();
 
             _health.Initialize(100f);
 
@@ -37,16 +41,20 @@ namespace FirstGame.Players
 
             Rotate(moveDirection);
             _movable.Move(finalVelocity);
+
+            bool isMoving = input.sqrMagnitude > 0.01f;
+
+            _animationController.SetIsRunning(isMoving);
         }
 
         public void TakeDamage(float damage)
         {
-            if(damage > 0)
+            if (damage > 0)
             {
                 _health.TakeDamage(damage);
                 Debug.Log("МЕНЯ УДАРИЛИ");
-                
-                if(_health.CurrentHealth <= 0)
+
+                if (_health.CurrentHealth <= 0)
                 {
                     Die();
                 }
@@ -60,8 +68,11 @@ namespace FirstGame.Players
 
         private void Attack(IDamageable target)
         {
-            target.TakeDamage(_damage);
-            Debug.Log("Враг получил урон!");
+            if (_damageDealer.Attack(target, _damage))
+            {
+                _animationController.Attack();
+                Debug.Log("Враг получил урон!");
+            }
         }
 
         private void Die()

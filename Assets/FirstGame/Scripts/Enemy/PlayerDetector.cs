@@ -9,13 +9,19 @@ namespace FirstGame.Enemy
         private Transform _playerTransform;
         public IDamageable PlayerDamageable { get; private set; }
 
-        public void SetTarget(Player player)
+        public void SetTarget(Transform player)
         {
-            _playerTransform = player.transform;
+            _playerTransform = player;
 
-            PlayerDamageable = player;
+            if (player != null)
+            {
+                PlayerDamageable = player.GetComponent<IDamageable>();
+            }
 
-            if (PlayerDamageable == null) Debug.LogError("[PlayerDetector] Ошибка! IDamageable игрока равен null.");
+            if (PlayerDamageable == null)
+            {
+                Debug.LogError("[PlayerDetector] Ошибка! IDamageable игрока равен null.");
+            }
         }
 
         public Vector3 GetPlayerPosition()

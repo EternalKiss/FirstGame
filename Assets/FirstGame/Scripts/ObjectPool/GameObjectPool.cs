@@ -13,7 +13,7 @@ namespace FirstGame.ObjectPool
         private ObjectPool<T> _pool;
         private WaitForSeconds _waitReleaseDelay;
 
-        private void Awake()
+        public void Initialize()
         {
             _pool = new ObjectPool<T>(
                 createFunc: OnCreateObject,

@@ -1,6 +1,6 @@
 using FirstGame.Combat;
-using FirstGame.Environment;
 using FirstGame.Interfaces;
+using FirstGame.Players;
 using System;
 using UnityEngine;
 
@@ -15,6 +15,8 @@ namespace FirstGame.Enemy
         private Mover _mover;
         private DamageDealer _damageDealer;
         private PlayerDetector _playerDetector;
+        private Rotator _rotator;
+        private AnimationController _animationController;
 
         public Health GetHealthComponent() => _health;
         public bool IsAlive => _health.CheckValidHealth() > 0;
@@ -27,6 +29,8 @@ namespace FirstGame.Enemy
             _playerDetector = GetComponent<PlayerDetector>();
             _health = GetComponent<Health>();
             _mover = GetComponent<Mover>();
+            _rotator = GetComponent<Rotator>();
+            _animationController = GetComponent<AnimationController>();
         }
 
         private void Update()
@@ -35,7 +39,8 @@ namespace FirstGame.Enemy
 
             if (!IsAlive || !_playerDetector.HasTarget) return;
 
-            _mover.Move(_playerDetector.GetPlayerPosition(), _attackRange);
+            Move(_playerDetector.GetPlayerPosition());
+            Rotate(_playerDetector.GetPlayerPosition());
 
             if (_mover.TargetReached)
             {
@@ -66,9 +71,15 @@ namespace FirstGame.Enemy
             _mover.Move(target, _attackRange);
         }
 
+        public void Rotate(Vector3 target)
+        {
+            _rotator.Rotate(target);
+        }
+
         private void TryAttack()
         {
             _damageDealer.Attack(_playerDetector.PlayerDamageable, _damage);
+            _animationController.Attack();
         }    
 
         private void Die()
