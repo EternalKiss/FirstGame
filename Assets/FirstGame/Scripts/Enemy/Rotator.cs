@@ -6,7 +6,9 @@ namespace FirstGame.Enemy
     {
         public void Rotate(Vector3 target)
         {
-            transform.LookAt(target);
+            Vector3 lockedTarget = new Vector3(target.x, transform.position.y, target.z);
+
+            transform.LookAt(lockedTarget);
         }
     }
 }

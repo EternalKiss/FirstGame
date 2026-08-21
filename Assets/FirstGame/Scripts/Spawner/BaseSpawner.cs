@@ -1,11 +1,14 @@
 using FirstGame.ObjectPool;
 using UnityEngine;
+using System;
 
 namespace FirstGame.Spawner
 {
     public abstract class BaseSpawner<T> : MonoBehaviour where T : Component, IDestructible
     {
         [SerializeField] private GameObjectPool<T> _objectPool;
+
+        public event Action<T> ObjectSpawned;
 
         public void InitializePool()
         {
@@ -25,6 +28,7 @@ namespace FirstGame.Spawner
 
             spawnedComponent.transform.position = position;
             spawnedComponent.transform.rotation = Quaternion.identity;
+            ObjectSpawned?.Invoke(spawnedComponent);
 
             InitializeSpawnedObject(spawnedComponent);
         }
@@ -36,6 +40,7 @@ namespace FirstGame.Spawner
             Vector3 spawnPosition = GetSpawnPosition();
             spawnedComponent.transform.position = spawnPosition;
             spawnedComponent.transform.rotation = Quaternion.identity;
+            ObjectSpawned?.Invoke(spawnedComponent);
 
             InitializeSpawnedObject(spawnedComponent);
         }

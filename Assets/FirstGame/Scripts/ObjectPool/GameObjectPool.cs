@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -11,7 +10,6 @@ namespace FirstGame.ObjectPool
         [SerializeField] private int _maxPoolSize = 20;
 
         private ObjectPool<T> _pool;
-        private WaitForSeconds _waitReleaseDelay;
 
         public void Initialize()
         {
@@ -38,7 +36,7 @@ namespace FirstGame.ObjectPool
 
         private T OnCreateObject()
         {
-            T poolObject = Instantiate(_prefab, transform);
+            T poolObject = Instantiate(_prefab);
 
             poolObject.OnReadyToRelease += HandleObjectDeath;
             return poolObject;
@@ -46,18 +44,20 @@ namespace FirstGame.ObjectPool
 
         private void OnTakeFromPool(T poolObject)
         {
+            poolObject.transform.SetParent(null);
             poolObject.gameObject.SetActive(true);
         }
 
         private void OnReturnToPool(T poolObject)
-        {   
+        {
             poolObject.gameObject.SetActive(false);
+            poolObject.transform.SetParent(transform);
         }
 
         private void OnDestroyObject(T poolObject)
         {
             poolObject.OnReadyToRelease -= HandleObjectDeath;
-            Destroy(poolObject);
+            Destroy(poolObject.gameObject);
         }
 
         private void HandleObjectDeath(IDestructible destructible)

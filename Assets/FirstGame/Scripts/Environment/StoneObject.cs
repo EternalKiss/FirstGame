@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FirstGame.Enviroment
+namespace FirstGame.Environment
 {
     public class StoneObject : MonoBehaviour
     {

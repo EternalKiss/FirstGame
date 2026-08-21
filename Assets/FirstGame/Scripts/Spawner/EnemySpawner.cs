@@ -47,7 +47,7 @@ public class EnemySpawner : BaseSpawner<Enemy>
         float randomX = Random.Range(_spawnAreaRangeX.x, _spawnAreaRangeX.y);
         float randomZ = Random.Range(_spawnAreaRangeZ.x, _spawnAreaRangeZ.y);
 
-        return new Vector3(randomX, 1f, randomZ);
+        return new Vector3(randomX, 0f, randomZ);
     }
 
     protected override void InitializeSpawnedObject(Enemy enemy)

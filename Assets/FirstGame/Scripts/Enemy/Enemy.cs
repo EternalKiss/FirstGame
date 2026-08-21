@@ -8,6 +8,8 @@ namespace FirstGame.Enemy
 {
     public class Enemy : MonoBehaviour, IDamageable, IDestructible
     {
+        [SerializeField] private float _attackInterval = 0.8f;
+
         private float _attackRange = 4f;
         private float _damage = 15f;
 
@@ -17,6 +19,7 @@ namespace FirstGame.Enemy
         private PlayerDetector _playerDetector;
         private Rotator _rotator;
         private AnimationController _animationController;
+        private EnemyVisual _enemyVisual;
 
         public Health GetHealthComponent() => _health;
         public bool IsAlive => _health.CheckValidHealth() > 0;
@@ -31,6 +34,10 @@ namespace FirstGame.Enemy
             _mover = GetComponent<Mover>();
             _rotator = GetComponent<Rotator>();
             _animationController = GetComponent<AnimationController>();
+            _enemyVisual = GetComponent<EnemyVisual>();
+
+            _animationController.AddAttackEventViaCode("Attack", "OnAttackHitEvent", 0.55f);
+            _animationController.SynchronizeAnimationSpeed(_attackInterval, "Attack");
         }
 
         private void Update()
@@ -58,10 +65,17 @@ namespace FirstGame.Enemy
 
         public void TakeDamage(float damage)
         {
+            if (!IsAlive) return;
+
             _health.TakeDamage(damage);
 
-            if (_health.CurrentHealth <= 0)
+            if (_health.CurrentHealth > 0)
             {
+                _enemyVisual?.PlayHitVisual();
+            }
+            else
+            {
+                _enemyVisual?.PlayDeathVisual();
                 Die();
             }
         }
@@ -76,10 +90,21 @@ namespace FirstGame.Enemy
             _rotator.Rotate(target);
         }
 
+        public void OnAttackHitEvent()
+        {
+            if (_playerDetector != null && _playerDetector.PlayerDamageable != null)
+            {
+                _playerDetector.PlayerDamageable.TakeDamage(_damage);
+                Debug.Log("[Enemy] БУМ! Анимация врага завершила замах, игрок получил урон.");
+            }
+        }
+
         private void TryAttack()
         {
-            _damageDealer.Attack(_playerDetector.PlayerDamageable, _damage);
-            _animationController.Attack();
+            if (_damageDealer.Attack(null, 0f))
+            {
+                _animationController.Attack();
+            }
         }    
 
         private void Die()

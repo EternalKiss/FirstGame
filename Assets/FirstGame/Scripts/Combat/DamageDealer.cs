@@ -1,3 +1,4 @@
+using FirstGame.Core;
 using FirstGame.Interfaces;
 using UnityEngine;
 
@@ -5,20 +6,44 @@ namespace FirstGame.Combat
 {
     public class DamageDealer : MonoBehaviour
     {
-        private float _attackDelay;
-        private float _attackInterval = 1f;
+        private GameplayTimer _attackCooldown;
+        private bool _canAttack = true;
+
+        private void Awake()
+        {
+            _attackCooldown = new GameplayTimer(1f);
+            _attackCooldown.OnTimerFinished += ResetCooldown;
+        }
+
+        public void InitializeCooldown(float interval)
+        {
+            if (_attackCooldown != null)
+            {
+                _attackCooldown.ChangeDuration(interval);
+            }
+        }
+
+        private void Update()
+        {
+            _attackCooldown?.Tick(Time.deltaTime);
+        }
 
         public bool Attack(IDamageable target, float damage)
         {
-            if (Time.time >= _attackDelay)
+            if (_canAttack)
             {
-                _attackDelay = Time.time + _attackInterval;
+                _canAttack = false;
+                _attackCooldown.Start();
 
-                target.TakeDamage(damage);
                 return true;
             }
 
             return false;
+        }
+
+        private void ResetCooldown()
+        {
+            _canAttack = true;
         }
     }
 }

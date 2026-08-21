@@ -9,6 +9,7 @@ namespace FirstGame.Environment
     {
         private Health _health;
         private ResourceVisual _resourceVisual;
+        private Collider _collider;
 
         public Health GetHealthComponent() => _health;
         public bool IsAlive => _health.CheckValidHealth() > 0;
@@ -18,7 +19,8 @@ namespace FirstGame.Environment
         public void Initialize(float startHealth)
         {
             _health = GetComponent<Health>();
-            _resourceVisual = GetComponent<ResourceVisual>();
+            _resourceVisual = GetComponentInChildren<ResourceVisual>();
+            _collider = GetComponent<Collider>();
 
             if (startHealth <= 0)
                 Debug.Log("Health is less or equal 0!");
@@ -30,7 +32,11 @@ namespace FirstGame.Environment
         {
             _health.TakeDamage(damage);
 
-            if(_health.CurrentHealth <= 0)
+            if(_health.CurrentHealth > 0)
+            {
+                _resourceVisual.PlayHitVisual();
+            }
+            else
             {
                 Die();
             }
@@ -38,9 +44,26 @@ namespace FirstGame.Environment
             Debug.Log($"Получил урон. Мое здоровье {_health.CurrentHealth}");
         }
 
-        private void Die()
+        public void CompleteDestruction()
         {
             OnReadyToRelease?.Invoke(this);
+        }
+
+        private void Die()
+        {
+            if (_collider != null)
+            {
+                _collider.enabled = false;
+            }
+
+            if (_resourceVisual != null)
+            {
+                _resourceVisual.PlayDeathVisual();
+            }
+            else
+            {
+                CompleteDestruction();
+            }
         }
     }
 }

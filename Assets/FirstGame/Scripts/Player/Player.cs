@@ -7,6 +7,7 @@ namespace FirstGame.Players
     public class Player : MonoBehaviour, IDamageable
     {
         [SerializeField] private float _moveSpeed = 5f;
+        [SerializeField] private float _attackInterval = 0.8f;
 
         private IMovable _movable;
         private IRotatable _rotatable;
@@ -14,8 +15,10 @@ namespace FirstGame.Players
         private Health _health;
         private AnimationController _animationController;
         private DamageDealer _damageDealer;
+        private IDamageable _currentTargetToHit;
 
-        private float _damage = 15f;
+        private float _damage = 70f;
+        private float _startHealth = 100f;
 
         public Health GetHealthComponent() => _health;
         public bool IsAlive => _health.CheckValidHealth() > 0;
@@ -29,8 +32,10 @@ namespace FirstGame.Players
             _animationController = GetComponentInChildren<AnimationController>();
             _damageDealer = GetComponent<DamageDealer>();
 
-            _health.Initialize(100f);
+            _health.Initialize(_startHealth);
 
+            _animationController.SynchronizeAnimationSpeed(_attackInterval, AnimationController.AttackTrigger);
+            _animationController.AddAttackEventViaCode(AnimationController.AttackTrigger, AnimationController.AttackEventMethodName, 0.55f);
             _targetDetector.TargetDetected += Attack;
         }
 
@@ -52,13 +57,22 @@ namespace FirstGame.Players
             if (damage > 0)
             {
                 _health.TakeDamage(damage);
-                Debug.Log("МЕНЯ УДАРИЛИ");
 
                 if (_health.CurrentHealth <= 0)
                 {
                     Die();
                 }
             }
+        }
+
+        public void OnAttackHitEvent()
+        {
+            if (_currentTargetToHit != null)
+            {
+                _currentTargetToHit.TakeDamage(_damage);
+            }
+
+            _currentTargetToHit = null;
         }
 
         private void Rotate(Vector3 direction)
@@ -70,8 +84,9 @@ namespace FirstGame.Players
         {
             if (_damageDealer.Attack(target, _damage))
             {
+                _currentTargetToHit = target;
+
                 _animationController.Attack();
-                Debug.Log("Враг получил урон!");
             }
         }
 

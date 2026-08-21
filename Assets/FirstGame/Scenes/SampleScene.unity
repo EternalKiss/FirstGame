@@ -388,7 +388,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerSpawner: {fileID: 1411008027}
   _enemySpawner: {fileID: 1843433227}
-  _resourceSpawner: {fileID: 1731367144}
+  _stoneSpawner: {fileID: 1731367148}
+  _treeSpawner: {fileID: 2034560745}
   _startDelayTimer: {fileID: 656903145}
 --- !u!4 &656903144
 Transform:
@@ -1163,32 +1164,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1731367146}
-  - component: {fileID: 1731367144}
   - component: {fileID: 1731367147}
+  - component: {fileID: 1731367148}
   m_Layer: 0
-  m_Name: ResourceSpawner
+  m_Name: StoneSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1731367144
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1731367143}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39fd06bfd2a78ca49980160cd3a4fc86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _objectPool: {fileID: 1731367147}
-  _startHealth: 50
-  _objectsCountToSpawn: 10
-  _spawnAreaRangeX: {x: -5, y: 5}
-  _spawnAreaRangeZ: {x: -5, y: 5}
 --- !u!4 &1731367146
 Transform:
   m_ObjectHideFlags: 0
@@ -1219,6 +1203,23 @@ MonoBehaviour:
   _prefab: {fileID: 5149051485088279408, guid: e5991744933e46c4c8c9ca59fd80c093, type: 3}
   _defaultCapacity: 10
   _maxPoolSize: 20
+--- !u!114 &1731367148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1731367143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8750799368056546829c3de76dc61a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectPool: {fileID: 1731367147}
+  _startHealth: 100
+  _objectsCountToSpawn: 10
+  _spawnAreaRangeX: {x: -15, y: 15}
+  _spawnAreaRangeZ: {x: -15, y: 15}
 --- !u!1 &1832533712 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7695173847112331561, guid: a4694147eae62854485622018e9aab16, type: 3}
@@ -1262,7 +1263,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1843433226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1336,6 +1337,71 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.01, y: 0.020999994, z: 0.0079999985}
   m_Center: {x: -0.00006369129, y: 0.003161747, z: -0.0031359352}
+--- !u!1 &2034560743
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2034560746}
+  - component: {fileID: 2034560745}
+  - component: {fileID: 2034560744}
+  m_Layer: 0
+  m_Name: TreeSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2034560744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2034560743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8d52abd7b5d7a0428bdb0ec75e4f8dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 2897548078747834008, guid: a75caeefa5e668a4fb2d3de5c95a8741, type: 3}
+  _defaultCapacity: 10
+  _maxPoolSize: 20
+--- !u!114 &2034560745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2034560743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce7ac412793446a4181905c15a558c77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectPool: {fileID: 2034560744}
+  _treeHealth: 100
+  _treesCount: 20
+  _spawnAreaRangeX: {x: -15, y: 15}
+  _spawnAreaRangeZ: {x: -15, y: 15}
+--- !u!4 &2034560746
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2034560743}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.4653797, y: 10.30085, z: -24.518404}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2063595832
 GameObject:
   m_ObjectHideFlags: 0
@@ -1454,3 +1520,4 @@ SceneRoots:
   - {fileID: 1411008028}
   - {fileID: 656903144}
   - {fileID: 1087597343}
+  - {fileID: 2034560746}
