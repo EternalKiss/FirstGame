@@ -1,6 +1,7 @@
 using UnityEngine;
 using FirstGame.Interfaces;
 using FirstGame.Combat;
+using FirstGame.Players.Weapon;
 
 namespace FirstGame.Players
 {
@@ -16,6 +17,7 @@ namespace FirstGame.Players
         private AnimationController _animationController;
         private DamageDealer _damageDealer;
         private IDamageable _currentTargetToHit;
+        private WeaponVisual _weaponVisual;
 
         private float _damage = 70f;
         private float _startHealth = 100f;
@@ -30,6 +32,7 @@ namespace FirstGame.Players
             _rotatable = GetComponent<IRotatable>();
             _targetDetector = GetComponent<TargetDetector>();
             _animationController = GetComponentInChildren<AnimationController>();
+            _weaponVisual = GetComponentInChildren<WeaponVisual>();
             _damageDealer = GetComponent<DamageDealer>();
 
             _health.Initialize(_startHealth);
@@ -48,6 +51,11 @@ namespace FirstGame.Players
             _movable.Move(finalVelocity);
 
             bool isMoving = input.sqrMagnitude > 0.01f;
+
+            if (isMoving && _weaponVisual != null)
+            {
+                _weaponVisual.HideWeapon();
+            }
 
             _animationController.SetIsRunning(isMoving);
         }
@@ -71,8 +79,6 @@ namespace FirstGame.Players
             {
                 _currentTargetToHit.TakeDamage(_damage);
             }
-
-            _currentTargetToHit = null;
         }
 
         private void Rotate(Vector3 direction)
@@ -82,10 +88,14 @@ namespace FirstGame.Players
 
         private void Attack(IDamageable target)
         {
+            if (_weaponVisual != null && target is Component targetComponent)
+            {
+                _weaponVisual.EquipByTarget(targetComponent);
+            }
+
             if (_damageDealer.Attack(target, _damage))
             {
                 _currentTargetToHit = target;
-
                 _animationController.Attack();
             }
         }
