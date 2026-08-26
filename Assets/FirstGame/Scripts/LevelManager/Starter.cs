@@ -1,6 +1,9 @@
+using FirstGame.Loot;
 using FirstGame.ObjectPool;
 using FirstGame.Players;
+using FirstGame.Players.Inventore;
 using FirstGame.Spawner;
+using FirstGame.PlayerUI;
 using UnityEngine;
 
 namespace FirstGame.LevelManager
@@ -13,9 +16,16 @@ namespace FirstGame.LevelManager
         [SerializeField] private GridSpawnManager _gridSpawnManager;
         [SerializeField] private StoneLootPiecePool _stoneLootPool;
         [SerializeField] private TreeLootPiecePool _treeLootPool;
+        [SerializeField] private LootDropHandler _lootDropHandler;
+        [SerializeField] private ResourceCounter _resourceCounter;
 
         private void Awake()
         {
+            if (_lootDropHandler != null)
+            {
+                _lootDropHandler.Initialize();
+            }
+
             if (_stoneLootPool != null)
             {
                 _stoneLootPool.Initialize();
@@ -41,6 +51,12 @@ namespace FirstGame.LevelManager
             if (_playerSpawner != null)
             {
                 spawnedPlayer = _playerSpawner.Spawn();
+            }
+
+            if (spawnedPlayer != null && _resourceCounter != null)
+            {
+                Inventory playerInventory = spawnedPlayer.GetComponent<Inventory>();
+                _resourceCounter.Initialize(playerInventory);
             }
 
             if (_enemySpawner != null && spawnedPlayer != null)

@@ -9,7 +9,7 @@ namespace FirstGame.Spawner
         [SerializeField] private Vector2 _mapSize = new Vector2(30f, 30f);
         [SerializeField] private float _cellSize = 2.5f;
 
-        [Header("Зона безопасности базы (Центр сцены)")]
+        [Header("Зона безопасности базы")]
         [SerializeField] private Vector3 _baseCenter = Vector3.zero;
         [SerializeField] private float _baseBufferRadius = 6f;
 
@@ -42,8 +42,8 @@ namespace FirstGame.Spawner
             int cellsX = Mathf.FloorToInt(_mapSize.x / _cellSize);
             int cellsZ = Mathf.FloorToInt(_mapSize.y / _cellSize);
 
-            float startX = -_mapSize.x / 2f + _cellSize / 2f;
-            float startZ = -_mapSize.y / 2f + _cellSize / 2f;
+            float startX = _baseCenter.x - (_mapSize.x / 2f) + (_cellSize / 2f);
+            float startZ = _baseCenter.z - (_mapSize.y / 2f) + (_cellSize / 2f);
 
             for (int x = 0; x < cellsX; x++)
             {

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4842806610297869510}
   - component: {fileID: 5206132267498142140}
   m_Layer: 7
-  m_Name: Piece
+  m_Name: StoneLoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 239e0541942c89e4abc2e47414f0c224, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lootType: 0
   _lifeTime: 2.5
   _fadeDuration: 0.5
 --- !u!54 &4842806610297869510
@@ -109,7 +110,7 @@ GameObject:
   - component: {fileID: 3632041569715302327}
   - component: {fileID: 499458721380420952}
   m_Layer: 7
-  m_Name: PieceView
+  m_Name: StoneLootView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

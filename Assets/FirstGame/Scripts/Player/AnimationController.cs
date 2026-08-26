@@ -93,7 +93,6 @@ namespace FirstGame.Players
 
                     clip.AddEvent(attackEvent);
 
-                    Debug.Log($"[AnimationController] Событие {functionName} успешно добавлено в код клипа {clip.name} на {attackEvent.time} сек.");
                     break;
                 }
             }
@@ -104,6 +103,7 @@ namespace FirstGame.Players
             {
                 if (ev.functionName == functionName) return true;
             }
+
             return false;
         }
     }

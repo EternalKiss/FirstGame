@@ -93,10 +93,6 @@ namespace FirstGame.Players
         private void Die()
         {
             Destroy(gameObject);
-        }
-
-        private void OnDestroy()
-        {
             _targetDetector.TargetDetected -= Attack;
         }
     }

@@ -12,17 +12,10 @@ namespace FirstGame.Loot
         [SerializeField] private LootSpawner _stoneLootSpawner;
         [SerializeField] private LootSpawner _treeLootSpawner;
 
-        private void Awake()
+        public void Initialize()
         {
-            if (_stoneSpawner != null)
-            {
-                _stoneSpawner.ObjectSpawned += HandleStoneSpawned;
-            }
-
-            if (_treeSpawner != null)
-            {
-                _treeSpawner.ObjectSpawned += HandleTreeSpawned;
-            }
+            if (_stoneSpawner != null) _stoneSpawner.ObjectSpawned += HandleStoneSpawned;
+            if (_treeSpawner != null) _treeSpawner.ObjectSpawned += HandleTreeSpawned;
         }
 
         private void HandleStoneSpawned(Resource stone)

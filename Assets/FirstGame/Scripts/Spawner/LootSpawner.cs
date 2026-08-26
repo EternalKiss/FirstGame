@@ -14,11 +14,8 @@ namespace FirstGame.Spawner
 
         public void SpawnLootExplosion(Vector3 position)
         {
-            Debug.Log($"[LootSpawner] МЕТОД ВЫЗВАН для {name} в точке {position}");
-
             if (_lootPool == null)
             {
-                Debug.LogError($"[LootSpawner] КРИТИЧЕСКАЯ ОШИБКА: Ссылка на _lootPool равна NULL на объекте {name}!");
                 return;
             }
 
@@ -28,11 +25,9 @@ namespace FirstGame.Spawner
 
                 if (piece == null)
                 {
-                    Debug.LogError("[LootSpawner] КРИТИЧЕСКАЯ ОШИБКА: Из пула вернулся NULL вместо осколка!");
                     continue;
                 }
 
-                // ЖЕЛЕЗОБЕТОННАЯ ЗАЩИТА: Принудительно включаем объект в Unity ПЕРЕД любыми действиями
                 piece.gameObject.SetActive(true);
 
                 Vector3 spawnOffset = new Vector3(Random.Range(-0.2f, 0.2f), 0.5f, Random.Range(-0.2f, 0.2f));
@@ -47,8 +42,6 @@ namespace FirstGame.Spawner
 
                 float force = Random.Range(_minExplosionForce, _maxExplosionForce);
                 bool isCollectable = i < _collectableCount;
-
-                Debug.Log($"[LootSpawner] Запускаю осколок #{i}: {piece.name}. Активен на сцене: {piece.gameObject.activeInHierarchy}");
 
                 piece.Launch(randomDirection, force, isCollectable);
             }

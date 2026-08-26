@@ -4,10 +4,17 @@ using UnityEngine;
 
 namespace FirstGame.Loot
 {
+    public enum LootType
+    {
+        Stone,
+        Tree
+    }
+
     public class LootPiece : MonoBehaviour, IDestructible
     {
         private static readonly int BaseColorPropertyId = Shader.PropertyToID("_BaseColor");
 
+        [SerializeField] private LootType _lootType;
         [SerializeField] private float _lifeTime = 4f;
         [SerializeField] private float _fadeDuration = 0.5f;
 
@@ -20,6 +27,7 @@ namespace FirstGame.Loot
         private bool _isMagnetized;
         private bool _hasBaseColorProperty;
 
+        public LootType Type => _lootType;
         public bool IsCollectable => _isCollectable;
         public bool IsMagnetized => _isMagnetized;
         public event Action<IDestructible> OnReadyToRelease;
@@ -54,7 +62,7 @@ namespace FirstGame.Loot
 
             if (_renderer != null)
             {
-                if (_renderer.material.HasProperty(BaseColorPropertyId))
+                if (_hasBaseColorProperty)
                     _renderer.material.SetColor(BaseColorPropertyId, _originalColor);
                 else
                     _renderer.material.color = _originalColor;
@@ -118,7 +126,7 @@ namespace FirstGame.Loot
                     Color fadeColor = _originalColor;
                     fadeColor.a = Mathf.Lerp(1f, 0f, progress);
 
-                    if (_renderer.material.HasProperty(BaseColorPropertyId))
+                    if (_hasBaseColorProperty)
                         _renderer.material.SetColor(BaseColorPropertyId, fadeColor);
                     else
                         _renderer.material.color = fadeColor;

@@ -1,6 +1,8 @@
 ﻿<Solution>
   <Project Path="Unity.InputSystem.csproj" />
+  <Project Path="Unity.TextMeshPro.csproj" />
   <Project Path="UnityEditor.UI.csproj" />
+  <Project Path="Unity.TextMeshPro.Editor.csproj" />
   <Project Path="UnityEngine.TestRunner.csproj" />
   <Project Path="Unity.VisualStudio.Editor.csproj" />
   <Project Path="UnityEditor.TestRunner.csproj" />

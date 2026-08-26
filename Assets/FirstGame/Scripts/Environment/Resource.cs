@@ -40,8 +40,6 @@ namespace FirstGame.Environment
             {
                 Die();
             }
-
-            Debug.Log($"Получил урон. Мое здоровье {_health.CurrentHealth}");
         }
 
         public void CompleteDestruction()
