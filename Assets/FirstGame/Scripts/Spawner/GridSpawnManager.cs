@@ -1,3 +1,5 @@
+using FirstGame.Common;
+using FistGame.Spawner;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,121 +7,109 @@ namespace FirstGame.Spawner
 {
     public class GridSpawnManager : MonoBehaviour
     {
-        [Header("Настройки сетки карты")]
-        [SerializeField] private Vector2 _mapSize = new Vector2(30f, 30f);
+        [SerializeField] private float _corridorWidth = 12f;
+        [SerializeField] private float _startOffsetFromGate = 2f;
+        [SerializeField] private float _playerSafetyRadius = 5f;
         [SerializeField] private float _cellSize = 2.5f;
 
-        [Header("Зона безопасности базы")]
-        [SerializeField] private Vector3 _baseCenter = Vector3.zero;
-        [SerializeField] private float _baseBufferRadius = 6f;
+        [SerializeField] private float _resourceHeightOffset = 0f;
 
         [SerializeField] private StoneSpawner _stoneSpawner;
         [SerializeField] private TreeSpawner _treeSpawner;
 
-        private List<Vector3> _availablePoints = new List<Vector3>();
+        private readonly List<Vector3> _availablePoints = new List<Vector3>(256);
+        private CorridorPointsGenerator _pointsGenerator;
+        private bool _isPoolsInitialized = false;
 
-        public void GenerateLevel()
+        private void Awake()
         {
-            GenerateGridPoints();
+            _pointsGenerator = new CorridorPointsGenerator(_corridorWidth, _cellSize, _startOffsetFromGate, 0f);
+        }
+
+        public void GenerateLevel(Vector3 entranceGatePosition, Vector3 direction, float corridorLength)
+        {
+            float usableLength = corridorLength - _startOffsetFromGate - _playerSafetyRadius;
+            if (usableLength <= 0f)
+            {
+                return;
+            }
+
+            HandlePoolsLifecycle();
+
+            _pointsGenerator.FillPoints(_availablePoints, entranceGatePosition, direction, usableLength, _resourceHeightOffset);
+            ListShuffler.Shuffle(_availablePoints);
+
+            int pointIndex = 0;
 
             if (_stoneSpawner != null)
             {
-                _stoneSpawner.InitializePool();
-                SpawnResourcesFromGrid(_stoneSpawner);
+                SpawnGroup(_stoneSpawner, ref pointIndex);
             }
 
             if (_treeSpawner != null)
             {
-                _treeSpawner.InitializePool();
-                SpawnResourcesFromGrid(_treeSpawner);
+                SpawnGroup(_treeSpawner, ref pointIndex);
             }
         }
 
-        private void GenerateGridPoints()
+        public void ClearResourcesOnly()
         {
-            _availablePoints.Clear();
-
-            int cellsX = Mathf.FloorToInt(_mapSize.x / _cellSize);
-            int cellsZ = Mathf.FloorToInt(_mapSize.y / _cellSize);
-
-            float startX = _baseCenter.x - (_mapSize.x / 2f) + (_cellSize / 2f);
-            float startZ = _baseCenter.z - (_mapSize.y / 2f) + (_cellSize / 2f);
-
-            for (int x = 0; x < cellsX; x++)
+            if (_stoneSpawner != null)
             {
-                for (int z = 0; z < cellsZ; z++)
-                {
-                    float posX = startX + (x * _cellSize);
-                    float posZ = startZ + (z * _cellSize);
-                    Vector3 potentialPoint = new Vector3(posX, 0f, posZ);
+                _stoneSpawner.ClearActiveObjects();
+            }
 
-                    float distanceToBase = Vector3.Distance(potentialPoint, _baseCenter);
-                    if (distanceToBase > _baseBufferRadius)
-                    {
-                        _availablePoints.Add(potentialPoint);
-                    }
+            if (_treeSpawner != null)
+            {
+                _treeSpawner.ClearActiveObjects();
+            }
+        }
+
+        private void HandlePoolsLifecycle()
+        {
+            if (_isPoolsInitialized == false)
+            {
+                if (_stoneSpawner != null)
+                {
+                    _stoneSpawner.InitializePool();
                 }
-            }
 
-            ShufflePoints(_availablePoints);
+                if (_treeSpawner != null)
+                {
+                    _treeSpawner.InitializePool();
+                }
+
+                _isPoolsInitialized = true;
+            }
+            else
+            {
+                ClearResourcesOnly();
+            }
         }
 
-        private void SpawnResourcesFromGrid<T>(BaseSpawner<T> spawner) where T : Component, IDestructible
+        private void SpawnGroup<T>(BasisSpawner<T> spawner, ref int pointIndex) where T : Component, IDestructible
         {
-            int countToSpawn = GetSpawnerCount(spawner);
+            int count = 0;
 
-            for (int i = 0; i < countToSpawn; i++)
+            if (spawner is StoneSpawner stone)
             {
-                if (_availablePoints.Count == 0)
+                count = stone.StonesCount;
+            }
+            else if (spawner is TreeSpawner tree)
+            {
+                count = tree.TreesCount;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                if (pointIndex >= _availablePoints.Count)
                 {
-                    Debug.LogWarning("[GridSpawnManager] Карта полностью заполнена! Не хватило свободных ячеек.");
                     break;
                 }
 
-                Vector3 spawnPosition = _availablePoints[0];
-                _availablePoints.RemoveAt(0);
-
-                float offsetRange = _cellSize * 0.15f;
-                float offsetX = Random.Range(-offsetRange, offsetRange);
-                float offsetZ = Random.Range(-offsetRange, offsetRange);
-                spawnPosition.x += offsetX;
-                spawnPosition.z += offsetZ;
-
-                spawner.SpawnAtPosition(spawnPosition);
+                spawner.SpawnAtPosition(_availablePoints[pointIndex]);
+                pointIndex++;
             }
-        }
-
-        private int GetSpawnerCount<T>(BaseSpawner<T> spawner) where T : Component, IDestructible
-        {
-            if (spawner is StoneSpawner stoneSpawner)
-            {
-                return stoneSpawner.StonesCount;
-            }
-            if (spawner is TreeSpawner treeSpawner)
-            {
-                return treeSpawner.TreesCount;
-            }
-            return 0;
-        }
-
-        private void ShufflePoints(List<Vector3> points)
-        {
-            for (int i = points.Count - 1; i > 0; i--)
-            {
-                int rnd = Random.Range(0, i + 1);
-                Vector3 temp = points[i];
-                points[i] = points[rnd];
-                points[rnd] = temp;
-            }
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireCube(_baseCenter, new Vector3(_mapSize.x, 0.1f, _mapSize.y));
-
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(_baseCenter, _baseBufferRadius);
         }
     }
 }

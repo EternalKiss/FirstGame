@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace FirstGame.Spawner
 {
-    public class TreeSpawner : BaseSpawner<Resource>
+    public class TreeSpawner : BasisSpawner<Resource>
     {
         [SerializeField] private float _treeHealth = 100f;
         [SerializeField] private int _treesCount = 20;

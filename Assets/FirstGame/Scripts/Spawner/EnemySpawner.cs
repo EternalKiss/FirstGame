@@ -2,7 +2,7 @@ using FirstGame.Enemy;
 using FirstGame.Spawner;
 using UnityEngine;
 
-public class EnemySpawner : BaseSpawner<Enemy>
+public class EnemySpawner : BasisSpawner<Enemy>
 {
     [SerializeField] private float _startHealth = 100f;
     [SerializeField] private float _spawnInterval = 5f;

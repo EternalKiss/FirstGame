@@ -1,13 +1,16 @@
 using FirstGame.ObjectPool;
-using UnityEngine;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace FirstGame.Spawner
 {
-    public abstract class BaseSpawner<T> : MonoBehaviour where T : Component, IDestructible
+    public abstract class BasisSpawner<T> : MonoBehaviour where T : Component, IDestructible
     {
         [SerializeField] private GameObjectPool<T> _objectPool;
 
+
+        private readonly List<T> _activeObjects = new List<T>(32);
         public event Action<T> ObjectSpawned;
 
         public void InitializePool()
@@ -22,13 +25,34 @@ namespace FirstGame.Spawner
             }
         }
 
+        public void ClearActiveObjects()
+        {
+            int count = _activeObjects.Count;
+            for (int i = count - 1; i >= 0; i--)
+            {
+                T obj = _activeObjects[i];
+
+                if (obj != null && obj.gameObject.activeSelf == true)
+                {
+                    _objectPool.Release(obj);
+                }
+            }
+            _activeObjects.Clear();
+        }
+
         public void SpawnAtPosition(Vector3 position)
         {
             T spawnedComponent = _objectPool.Get();
 
             spawnedComponent.transform.position = position;
             spawnedComponent.transform.rotation = Quaternion.identity;
-            ObjectSpawned?.Invoke(spawnedComponent);
+
+            _activeObjects.Add(spawnedComponent);
+
+            if (ObjectSpawned != null)
+            {
+                ObjectSpawned.Invoke(spawnedComponent);
+            }
 
             InitializeSpawnedObject(spawnedComponent);
         }
@@ -40,13 +64,23 @@ namespace FirstGame.Spawner
             Vector3 spawnPosition = GetSpawnPosition();
             spawnedComponent.transform.position = spawnPosition;
             spawnedComponent.transform.rotation = Quaternion.identity;
-            ObjectSpawned?.Invoke(spawnedComponent);
+
+            _activeObjects.Add(spawnedComponent);
+
+            if (ObjectSpawned != null)
+            {
+                ObjectSpawned.Invoke(spawnedComponent);
+            }
 
             InitializeSpawnedObject(spawnedComponent);
         }
 
         protected void ReturnToPool(T spawnedComponent)
         {
+            if (_activeObjects.Contains(spawnedComponent))
+            {
+                _activeObjects.Remove(spawnedComponent);
+            }
             _objectPool.Release(spawnedComponent);
         }
 

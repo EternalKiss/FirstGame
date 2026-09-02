@@ -1,14 +1,21 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Threading.Tasks;
 
 namespace FirstGame.LevelManager
 {
     public class Restarter : MonoBehaviour
     {
-        public void RestartLevel()
+        public async void RestartLevel()
         {
             int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene(currentSceneIndex);
+
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(currentSceneIndex);
+
+            while (!asyncLoad.isDone)
+            {
+                await Task.Yield();
+            }
         }
     }
 }

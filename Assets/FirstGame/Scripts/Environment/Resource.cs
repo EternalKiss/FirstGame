@@ -16,25 +16,41 @@ namespace FirstGame.Environment
 
         public event Action<IDestructible> OnReadyToRelease;
 
-        public void Initialize(float startHealth)
+        private void Awake()
         {
             _health = GetComponent<Health>();
             _resourceVisual = GetComponentInChildren<ResourceVisual>();
             _collider = GetComponent<Collider>();
+        }
 
+        public void Initialize(float startHealth)
+        {
             if (startHealth <= 0)
+            {
                 Debug.Log("Health is less or equal 0!");
+            }
 
-            _health.Initialize(startHealth);
+            if (_collider != null)
+            {
+                _collider.enabled = true;
+            }
+
+            if (_health != null)
+            {
+                _health.Initialize(startHealth);
+            }
         }
 
         public void TakeDamage(float damage)
         {
             _health.TakeDamage(damage);
 
-            if(_health.CurrentHealth > 0)
+            if (_health.CurrentHealth > 0)
             {
-                _resourceVisual.PlayHitVisual();
+                if (_resourceVisual != null)
+                {
+                    _resourceVisual.PlayHitVisual();
+                }
             }
             else
             {
@@ -44,7 +60,10 @@ namespace FirstGame.Environment
 
         public void CompleteDestruction()
         {
-            OnReadyToRelease?.Invoke(this);
+            if (OnReadyToRelease != null)
+            {
+                OnReadyToRelease.Invoke(this);
+            }
         }
 
         private void Die()

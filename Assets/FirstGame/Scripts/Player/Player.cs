@@ -1,109 +1,92 @@
-using UnityEngine;
-using FirstGame.Interfaces;
 using FirstGame.Combat;
+using FirstGame.Interfaces;
 using FirstGame.Players.Weapon;
+using System;
+using UnityEngine;
 
 namespace FirstGame.Players
 {
     public class Player : MonoBehaviour, IDamageable
     {
-        [SerializeField] private float _moveSpeed = 5f;
         [SerializeField] private float _attackInterval = 0.8f;
+        [SerializeField] private float _damage = 70f;
+        [SerializeField] private float _startHealth = 100f;
 
-        private IMovable _movable;
-        private IRotatable _rotatable;
+        private PlayerMovement _movement;
         private TargetDetector _targetDetector;
         private Health _health;
         private AnimationController _animationController;
         private DamageDealer _damageDealer;
-        private IDamageable _currentTargetToHit;
-        private WeaponVisual _weaponVisual;
+        private PlayerCombatController _combatController;
+        private PlayerDamageReceiver _damageReceiver;
 
-        private float _damage = 70f;
-        private float _startHealth = 100f;
+        public Health GetHealthComponent()
+        {
+            return _health;
+        }
 
-        public Health GetHealthComponent() => _health;
-        public bool IsAlive => _health.CheckValidHealth() > 0;
+        public bool IsAlive
+        {
+            get
+            {
+                return _health != null && _health.CheckValidHealth() > 0;
+            }
+        }
 
         public void Initialize()
         {
             _health = GetComponent<Health>();
-            _movable = GetComponent<IMovable>();
-            _rotatable = GetComponent<IRotatable>();
             _targetDetector = GetComponent<TargetDetector>();
-            _animationController = GetComponentInChildren<AnimationController>();
-            _weaponVisual = GetComponentInChildren<WeaponVisual>();
             _damageDealer = GetComponent<DamageDealer>();
+            _movement = GetComponent<PlayerMovement>();
+            _animationController = GetComponentInChildren<AnimationController>();
 
-            _health.Initialize(_startHealth);
+            _combatController = GetComponent<PlayerCombatController>();
+            _damageReceiver = GetComponent<PlayerDamageReceiver>();
 
-            _animationController.SynchronizeAnimationSpeed(_attackInterval, AnimationController.AttackTrigger);
-            _animationController.AddAttackEventViaCode(AnimationController.AttackTrigger, AnimationController.AttackEventMethodName, 0.55f);
-            _targetDetector.TargetDetected += Attack;
+            if (_combatController != null)
+            {
+                _combatController.Initialize(_targetDetector, _animationController, _damageDealer, _attackInterval, _damage);
+            }
+
+            if (_damageReceiver != null)
+            {
+                _damageReceiver.Initialize(_health, _combatController, _startHealth);
+            }
+
+            if (_movement != null)
+            {
+                _movement.Initialize(_animationController);
+            }
+
+            var weaponVisual = GetComponentInChildren<WeaponVisual>();
+            if (weaponVisual != null)
+            {
+                weaponVisual.BindToPlayer(this);
+            }
         }
 
         public void Move(Vector2 input)
         {
-            Vector3 moveDirection = new Vector3(input.x, 0f, input.y);
-            Vector3 finalVelocity = Vector3.ClampMagnitude(moveDirection, 1f) * _moveSpeed;
-
-            Rotate(moveDirection);
-            _movable.Move(finalVelocity);
-
-            bool isMoving = input.sqrMagnitude > 0.01f;
-
-            if (isMoving && _weaponVisual != null)
+            if (_movement != null)
             {
-                _weaponVisual.HideWeapon();
+                _movement.Move(input);
             }
-
-            _animationController.SetIsRunning(isMoving);
         }
 
         public void TakeDamage(float damage)
         {
-            if (damage > 0)
+            if (_damageReceiver != null)
             {
-                _health.TakeDamage(damage);
-
-                if (_health.CurrentHealth <= 0)
-                {
-                    Die();
-                }
+                _damageReceiver.ReceiveDamage(damage);
             }
         }
-
         public void OnAttackHitEvent()
         {
-            if (_currentTargetToHit != null)
+            if (_combatController != null)
             {
-                _currentTargetToHit.TakeDamage(_damage);
+                _combatController.OnAttackHitEvent();
             }
-        }
-
-        private void Rotate(Vector3 direction)
-        {
-            _rotatable.Rotate(direction);
-        }
-
-        private void Attack(IDamageable target)
-        {
-            if (_weaponVisual != null && target is Component targetComponent)
-            {
-                _weaponVisual.EquipByTarget(targetComponent);
-            }
-
-            if (_damageDealer.Attack(target, _damage))
-            {
-                _currentTargetToHit = target;
-                _animationController.Attack();
-            }
-        }
-
-        private void Die()
-        {
-            Destroy(gameObject);
-            _targetDetector.TargetDetected -= Attack;
         }
     }
 }

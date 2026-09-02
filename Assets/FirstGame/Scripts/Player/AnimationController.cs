@@ -35,14 +35,17 @@ namespace FirstGame.Players
 
         public void Attack()
         {
-            AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-
-            if (stateInfo.IsName(AttackTrigger))
-            {
-                return;
-            }
+            if (_animator == null) return;
+            _animator.SetFloat(_attackSpeedHash, _animator.GetFloat(_attackSpeedHash));
 
             _animator.SetTrigger(_attackHash);
+        }
+
+        public void ResetAttackTrigger()
+        {
+            if (_animator == null) return;
+
+            _animator.ResetTrigger(_attackHash);
         }
 
         public void SynchronizeAnimationSpeed(float attackInterval, string clipName = AttackTrigger)
@@ -86,24 +89,20 @@ namespace FirstGame.Players
                     if (HasEventAlready(clip, functionName)) return;
 
                     AnimationEvent attackEvent = new AnimationEvent();
-
                     attackEvent.functionName = functionName;
-
                     attackEvent.time = clip.length * Mathf.Clamp01(hitTimePercent);
-
                     clip.AddEvent(attackEvent);
-
                     break;
                 }
             }
         }
+
         private bool HasEventAlready(AnimationClip clip, string functionName)
         {
             foreach (var ev in clip.events)
             {
                 if (ev.functionName == functionName) return true;
             }
-
             return false;
         }
     }

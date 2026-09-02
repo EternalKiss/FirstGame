@@ -1,47 +1,68 @@
-using UnityEngine;
-using FirstGame.Base;
 using FirstGame.PlayerUI;
+using FirstGame.Spawner;
+using UnityEngine;
 
 namespace FirstGame.LevelManager
 {
     public class LevelEndHandler : MonoBehaviour
     {
-        [SerializeField] private EnterTriggerHandler _enterTrigger;
         [SerializeField] private EndUIViewer _endUIViewer;
 
+        private BaseSpawner _baseSpawner;
         private Restarter _restarter;
         private LevelLoader _levelLoader;
 
         private void Awake()
         {
             _restarter = GetComponent<Restarter>();
+            _levelLoader = GetComponent<LevelLoader>();
         }
 
-        private void OnEnable()
+        private void OnDestroy()
         {
-            _enterTrigger.EnteredInBase += ShowEndUI;
-            _endUIViewer.RestartButtonPressed += Restart;
-            _endUIViewer.ContinueButtonPressed += LoadNextLevel;
+            if (_baseSpawner != null)
+            {
+                _baseSpawner.LevelCompleted -= ActivateLevelEndPhase;
+            }
+
+            if (_endUIViewer != null)
+            {
+                _endUIViewer.RestartButtonPressed -= Restart;
+                _endUIViewer.ContinueButtonPressed -= LoadNextLevel;
+            }
         }
 
-        private void OnDisable()
+        public void Initialize(BaseSpawner baseSpawner)
         {
-            _enterTrigger.EnteredInBase -= ShowEndUI;
+            _baseSpawner = baseSpawner;
+            _baseSpawner.LevelCompleted += ActivateLevelEndPhase;
+
+            if (_endUIViewer != null)
+            {
+                _endUIViewer.RestartButtonPressed += Restart;
+                _endUIViewer.ContinueButtonPressed += LoadNextLevel;
+            }
         }
 
-        private void ShowEndUI()
+        private void ActivateLevelEndPhase()
         {
-            _endUIViewer.ShowEndUI();
+            if (_endUIViewer != null)
+            {
+                _endUIViewer.ShowEndUI();
+            }
         }
 
         private void Restart()
         {
-            _restarter.RestartLevel();
+            if (_restarter != null)
+            {
+                _restarter.RestartLevel();
+            }
         }
 
         private void LoadNextLevel()
         {
-
+            
         }
     }
 }

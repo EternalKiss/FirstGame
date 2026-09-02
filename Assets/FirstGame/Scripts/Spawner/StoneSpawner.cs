@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace FirstGame.Spawner
 {
-    public class StoneSpawner : BaseSpawner<Resource>
+    public class StoneSpawner : BasisSpawner<Resource>
     {
         [SerializeField] private float _startHealth = 50f;
         [SerializeField] private int _stonesCount = 10;

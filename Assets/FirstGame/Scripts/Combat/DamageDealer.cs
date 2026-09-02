@@ -9,6 +9,8 @@ namespace FirstGame.Combat
         private GameplayTimer _attackCooldown;
         private bool _canAttack = true;
 
+        public bool CanAttack => _canAttack;
+
         private void Awake()
         {
             _attackCooldown = new GameplayTimer(1f);
@@ -34,11 +36,16 @@ namespace FirstGame.Combat
             {
                 _canAttack = false;
                 _attackCooldown.Start();
-
                 return true;
             }
 
             return false;
+        }
+
+        public void StopCooldown()
+        {
+            _attackCooldown?.Stop();
+            _canAttack = true;
         }
 
         private void ResetCooldown()
