@@ -28,15 +28,20 @@ namespace FirstGame.Spawner
         public void ClearActiveObjects()
         {
             int count = _activeObjects.Count;
+
             for (int i = count - 1; i >= 0; i--)
             {
                 T obj = _activeObjects[i];
 
-                if (obj != null && obj.gameObject.activeSelf == true)
+                if (obj != null)
                 {
-                    _objectPool.Release(obj);
+                    if (obj.gameObject.activeSelf == true)
+                    {
+                        _objectPool.Release(obj);
+                    }
                 }
             }
+
             _activeObjects.Clear();
         }
 

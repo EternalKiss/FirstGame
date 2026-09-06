@@ -21,10 +21,21 @@ namespace FirstGame.LevelManager
         [SerializeField] private LootDropHandler _lootDropHandler;
         [SerializeField] private ResourceCounter _resourceCounter;
         [SerializeField] private LevelEndHandler _endLevelHandler;
+        [SerializeField] private LevelPhaseController _levelCleaner;
+        [SerializeField] private LevelProgressController _progressController;
+        [SerializeField] private float _initialCorridorLength = 30f;
 
         private async void Start()
         {
             await LoadLevelAsync();
+        }
+
+        private void OnDestroy()
+        {
+            if (_startDelayTimer != null && _enemySpawner != null)
+            {
+                _startDelayTimer.OnTimerFinished -= _enemySpawner.StartSpawning;
+            }
         }
 
         private async Task LoadLevelAsync()
@@ -53,20 +64,27 @@ namespace FirstGame.LevelManager
                 }
 
                 _enemySpawner?.SetPlayerTarget(spawnedPlayer.transform);
+                _enemySpawner.StartSpawning();
 
                 if (_baseSpawner != null)
                 {
-                    _baseSpawner.Initialize(spawnedPlayer.transform, _gridSpawnManager);
-                    _endLevelHandler?.Initialize(_baseSpawner);
-                }
-            }
-        }
+                    Vector3 initialBasePos = spawnedPlayer.transform.position + Vector3.forward * _initialCorridorLength;
+                    var initialBase = _baseSpawner.SpawnBase(initialBasePos);
 
-        private void OnDestroy()
-        {
-            if (_startDelayTimer != null && _enemySpawner != null)
-            {
-                _startDelayTimer.OnTimerFinished -= _enemySpawner.StartSpawning;
+                    if (_gridSpawnManager != null)
+                    {
+                        _gridSpawnManager.GenerateLevel(initialBase.EntrancePosition, Vector3.back, _initialCorridorLength);
+                    }
+
+                    if (_progressController != null)
+                    {
+                        _progressController.Initialize(_baseSpawner, _gridSpawnManager);
+                        _progressController.SetInitialBase(initialBase);
+                        _endLevelHandler?.Initialize(_progressController);
+                    }
+
+                    _levelCleaner?.Initialize(_baseSpawner);
+                }
             }
         }
     }

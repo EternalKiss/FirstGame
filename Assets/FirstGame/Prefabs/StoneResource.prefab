@@ -13,6 +13,9 @@ GameObject:
   - component: {fileID: 5149051485088279408}
   - component: {fileID: 5180970349429660813}
   - component: {fileID: -7587739848529899768}
+  - component: {fileID: 948684895056077771}
+  - component: {fileID: 1114871767612733616}
+  - component: {fileID: 713309487139265603}
   m_Layer: 6
   m_Name: StoneResource
   m_TagString: Untagged
@@ -93,6 +96,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c8a3265a905e8418269f4056e95a7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &948684895056077771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4748618209901368856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d543faae16315fd41b6cd9f9ca29aa01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currentLevel: 1
+--- !u!114 &1114871767612733616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4748618209901368856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6218903b617cf354784c0fa173ad852a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _baseXpReward: 25
+  _xpMultiplierPerLevel: 0.15
+--- !u!114 &713309487139265603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4748618209901368856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2aa14157439dff469260133bbacbfc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _xpEarnedEvent: {fileID: 11400000, guid: 0af88ab866bf3424086e1f1024ccbbe3, type: 2}
 --- !u!1001 &8318840837897224845
 PrefabInstance:
   m_ObjectHideFlags: 0

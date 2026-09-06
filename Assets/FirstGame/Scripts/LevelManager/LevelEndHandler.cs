@@ -8,7 +8,7 @@ namespace FirstGame.LevelManager
     {
         [SerializeField] private EndUIViewer _endUIViewer;
 
-        private BaseSpawner _baseSpawner;
+        private LevelProgressController _progressController;
         private Restarter _restarter;
         private LevelLoader _levelLoader;
 
@@ -20,9 +20,9 @@ namespace FirstGame.LevelManager
 
         private void OnDestroy()
         {
-            if (_baseSpawner != null)
+            if (_progressController != null)
             {
-                _baseSpawner.LevelCompleted -= ActivateLevelEndPhase;
+                _progressController.LevelCompleted -= ActivateLevelEndPhase;
             }
 
             if (_endUIViewer != null)
@@ -32,10 +32,10 @@ namespace FirstGame.LevelManager
             }
         }
 
-        public void Initialize(BaseSpawner baseSpawner)
+        public void Initialize(LevelProgressController progressController)
         {
-            _baseSpawner = baseSpawner;
-            _baseSpawner.LevelCompleted += ActivateLevelEndPhase;
+            _progressController = progressController;
+            _progressController.LevelCompleted += ActivateLevelEndPhase;
 
             if (_endUIViewer != null)
             {
@@ -62,7 +62,7 @@ namespace FirstGame.LevelManager
 
         private void LoadNextLevel()
         {
-            
+
         }
     }
 }
