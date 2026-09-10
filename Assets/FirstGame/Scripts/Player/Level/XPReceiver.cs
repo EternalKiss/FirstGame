@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace FirstGame.Players.Level
 {
-    public class XPRecevier : MonoBehaviour
+    public class XPReceiver : MonoBehaviour
     {
         [SerializeField] private FloatGameEvent _xpEarnedEvent;
 

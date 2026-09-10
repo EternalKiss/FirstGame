@@ -14,28 +14,19 @@ namespace FirstGame.LevelManager
         [SerializeField] private PlayerSpawner _playerSpawner;
         [SerializeField] private EnemySpawner _enemySpawner;
         [SerializeField] private BaseSpawner _baseSpawner;
-        [SerializeField] private SpawnEnemyTimer _startDelayTimer;
         [SerializeField] private GridSpawnManager _gridSpawnManager;
         [SerializeField] private StoneLootPiecePool _stoneLootPool;
         [SerializeField] private TreeLootPiecePool _treeLootPool;
         [SerializeField] private LootDropHandler _lootDropHandler;
         [SerializeField] private ResourceCounter _resourceCounter;
         [SerializeField] private LevelEndHandler _endLevelHandler;
-        [SerializeField] private LevelPhaseController _levelCleaner;
         [SerializeField] private LevelProgressController _progressController;
+        [SerializeField] private DayNightCycle _dayNightCycle;
         [SerializeField] private float _initialCorridorLength = 30f;
 
         private async void Start()
         {
             await LoadLevelAsync();
-        }
-
-        private void OnDestroy()
-        {
-            if (_startDelayTimer != null && _enemySpawner != null)
-            {
-                _startDelayTimer.OnTimerFinished -= _enemySpawner.StartSpawning;
-            }
         }
 
         private async Task LoadLevelAsync()
@@ -64,7 +55,6 @@ namespace FirstGame.LevelManager
                 }
 
                 _enemySpawner?.SetPlayerTarget(spawnedPlayer.transform);
-                _enemySpawner.StartSpawning();
 
                 if (_baseSpawner != null)
                 {
@@ -83,7 +73,7 @@ namespace FirstGame.LevelManager
                         _endLevelHandler?.Initialize(_progressController);
                     }
 
-                    _levelCleaner?.Initialize(_baseSpawner);
+                    _dayNightCycle?.StartDay();
                 }
             }
         }
