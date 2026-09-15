@@ -1,16 +1,17 @@
 using FirstGame.Combat;
 using FirstGame.Interfaces;
+using FirstGame.Players.Abilities;
 using FirstGame.Players.Weapon;
-using System;
 using UnityEngine;
 
 namespace FirstGame.Players
 {
     public class Player : MonoBehaviour, IDamageable
     {
-        [SerializeField] private float _attackInterval = 0.8f;
+        [SerializeField] private float _baseAttackInterval = 0.8f;
         [SerializeField] private float _damage = 70f;
         [SerializeField] private float _startHealth = 100f;
+        [SerializeField] private float _attackSpeedMultiplier = 1f;
 
         private PlayerMovement _movement;
         private TargetDetector _targetDetector;
@@ -19,12 +20,9 @@ namespace FirstGame.Players
         private DamageDealer _damageDealer;
         private PlayerCombatController _combatController;
         private PlayerDamageReceiver _damageReceiver;
+        private AbilityController _abilityController;
 
-        public Health GetHealthComponent()
-        {
-            return _health;
-        }
-
+        public Health GetHealthComponent() => _health;
         public bool IsAlive
         {
             get
@@ -43,10 +41,11 @@ namespace FirstGame.Players
 
             _combatController = GetComponent<PlayerCombatController>();
             _damageReceiver = GetComponent<PlayerDamageReceiver>();
+            _abilityController = GetComponent<AbilityController>();
 
             if (_combatController != null)
             {
-                _combatController.Initialize(_targetDetector, _animationController, _damageDealer, _attackInterval, _damage);
+                _combatController.Initialize(_targetDetector, _animationController, _damageDealer, _baseAttackInterval, _damage);
             }
 
             if (_damageReceiver != null)
@@ -60,6 +59,7 @@ namespace FirstGame.Players
             }
 
             var weaponVisual = GetComponentInChildren<WeaponVisual>();
+
             if (weaponVisual != null)
             {
                 weaponVisual.BindToPlayer(this);
@@ -74,18 +74,53 @@ namespace FirstGame.Players
             }
         }
 
+        public void SetAttackSpeedMultiplier(float multiplier)
+        {
+            _attackSpeedMultiplier = multiplier;
+
+            if (_combatController == null)
+            {
+                return;
+            }
+
+            float effectiveInterval = _baseAttackInterval / _attackSpeedMultiplier;
+            _combatController.SetAttackInterval(effectiveInterval);
+        }
+
         public void TakeDamage(float damage)
         {
             if (_damageReceiver != null)
             {
                 _damageReceiver.ReceiveDamage(damage);
             }
+
+            if (_abilityController != null)
+            {
+                _abilityController.TriggerAbilities(AbilityTrigger.OnDamageTaken);
+            }
         }
+
         public void OnAttackHitEvent()
         {
             if (_combatController != null)
             {
                 _combatController.OnAttackHitEvent();
+            }
+        }
+
+        public void OnAbilityHitEvent()
+        {
+            if (_abilityController != null)
+            {
+                _abilityController.ApplyPendingDamage();
+            }
+        }
+
+        public void SetIgnoreCombatAttackEvents(bool ignore)
+        {
+            if (_combatController != null)
+            {
+                _combatController.SetIgnoreAttackEvents(ignore);
             }
         }
     }

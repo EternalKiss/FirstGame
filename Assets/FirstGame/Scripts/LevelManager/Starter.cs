@@ -1,11 +1,13 @@
 using FirstGame.Loot;
 using FirstGame.ObjectPool;
 using FirstGame.Players;
+using FirstGame.Players.Abilities;
 using FirstGame.Players.Inventore;
-using FirstGame.Spawner;
+using FirstGame.Players.Level;
 using FirstGame.PlayerUI;
-using UnityEngine;
+using FirstGame.Spawner;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace FirstGame.LevelManager
 {
@@ -44,6 +46,15 @@ namespace FirstGame.LevelManager
             if (_playerSpawner != null)
             {
                 spawnedPlayer = _playerSpawner.Spawn();
+            }
+
+            LevelUpScreen levelUpScreen = FindObjectOfType<LevelUpScreen>();
+
+            if (levelUpScreen != null)
+            {
+                Experience experience = spawnedPlayer.GetComponent<Experience>();
+                AbilitySlotController slotController = spawnedPlayer.GetComponent<AbilitySlotController>();
+                levelUpScreen.Initialize(experience, slotController);
             }
 
             if (spawnedPlayer != null)

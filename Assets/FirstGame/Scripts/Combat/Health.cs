@@ -1,4 +1,4 @@
-using FirstGame.Interfaces;
+using System;
 using UnityEngine;
 
 namespace FirstGame.Combat
@@ -11,12 +11,16 @@ namespace FirstGame.Combat
         public float MaxHealth => _maxHealth;
         public float CurrentHealth => _currentHealth;
 
+        public event Action<float> HealthChanged;
+
         public void Initialize(float maxHealth)
         {
             _maxHealth = maxHealth;
             _currentHealth = maxHealth;
 
             _currentHealth = CheckValidHealth();
+
+            HealthChanged?.Invoke(_currentHealth);
         }
 
         public float CheckValidHealth()
@@ -41,6 +45,26 @@ namespace FirstGame.Combat
                 _currentHealth -= damage;
                 _currentHealth = CheckValidHealth();
             }
+
+            HealthChanged?.Invoke(_currentHealth);
+        }
+
+        public void Heal(float amount)
+        {
+            if (amount <= 0f)
+            {
+                return;
+            }
+
+            if (_currentHealth <= 0f)
+            {
+                return;
+            }
+
+            _currentHealth += amount;
+            _currentHealth = CheckValidHealth();
+
+            HealthChanged?.Invoke(_currentHealth);
         }
     }
 }

@@ -2,6 +2,7 @@ using FirstGame.Combat;
 using FirstGame.Interfaces;
 using FirstGame.Players;
 using System;
+using TMPro;
 using UnityEngine;
 
 namespace FirstGame.Enemy
@@ -9,9 +10,8 @@ namespace FirstGame.Enemy
     public class Enemy : MonoBehaviour, IDamageable, IDestructible
     {
         [SerializeField] private float _attackInterval = 0.8f;
-
-        private float _attackRange = 4f;
-        private float _damage = 15f;
+        [SerializeField] private float _attackRange = 4f;
+        [SerializeField] private float _damage = 15f;
 
         private Health _health;
         private Mover _mover;
@@ -20,6 +20,9 @@ namespace FirstGame.Enemy
         private Rotator _rotator;
         private AnimationController _animationController;
         private EnemyVisual _enemyVisual;
+
+        private float _nextAttackTime;
+        private bool _isAttacking;
 
         public Health GetHealthComponent() => _health;
         public bool IsAlive => _health.CheckValidHealth() > 0;
@@ -42,34 +45,55 @@ namespace FirstGame.Enemy
 
         private void Update()
         {
-            if (_health == null || _playerDetector == null || _mover == null) return;
-
-            if (!IsAlive || !_playerDetector.HasTarget) return;
-
-            Move(_playerDetector.GetPlayerPosition());
-            Rotate(_playerDetector.GetPlayerPosition());
-
-            if (_mover.TargetReached)
+            if (_health == null || _playerDetector == null || _mover == null)
             {
+                return;
+            }
+
+            if (IsAlive == false || _playerDetector.HasTarget == false)
+            {
+                return;
+            }
+
+            Vector3 targetPosition = _playerDetector.GetPlayerPosition();
+
+            if (_isAttacking && Time.time >= _nextAttackTime)
+            {
+                _isAttacking = false;
+            }
+
+            if (IsTargetClose(targetPosition))
+            {
+                Rotate(targetPosition);
                 TryAttack();
+            }
+            else
+            {
+                Move(targetPosition);
+                Rotate(targetPosition);
             }
         }
 
         public void Initialize(float startHealth)
         {
-            if (startHealth <= 0)
+            if (startHealth <= 0f)
+            {
                 Debug.Log("Health is less or equal 0!");
+            }
 
             _health.Initialize(startHealth);
         }
 
         public void TakeDamage(float damage)
         {
-            if (!IsAlive) return;
+            if (IsAlive == false)
+            {
+                return;
+            }
 
             _health.TakeDamage(damage);
 
-            if (_health.CurrentHealth > 0)
+            if (_health.CurrentHealth > 0f)
             {
                 _enemyVisual?.PlayHitVisual();
             }
@@ -92,20 +116,46 @@ namespace FirstGame.Enemy
 
         public void OnAttackHitEvent()
         {
-            if (_playerDetector != null && _playerDetector.PlayerDamageable != null)
+            if (_playerDetector == null)
             {
-                _playerDetector.PlayerDamageable.TakeDamage(_damage);
-                Debug.Log("[Enemy] БУМ! Анимация врага завершила замах, игрок получил урон.");
+                return;
             }
+
+            if (_playerDetector.PlayerDamageable == null)
+            {
+                return;
+            }
+
+            _damageDealer.DealDamage(_playerDetector.PlayerDamageable, _damage);
+        }
+
+        private bool IsTargetClose(Vector3 targetPosition)
+        {
+            Vector3 offset = targetPosition - transform.position;
+            offset.y = 0f;
+
+            float sqrDistance = offset.sqrMagnitude;
+
+            return sqrDistance <= _attackRange * _attackRange;
         }
 
         private void TryAttack()
         {
-            if (_damageDealer.Attack(null, 0f))
+            if (_isAttacking)
             {
-                _animationController.Attack();
+                return;
             }
-        }    
+
+            if (Time.time < _nextAttackTime)
+            {
+                return;
+            }
+
+            _isAttacking = true;
+            _nextAttackTime = Time.time + _attackInterval;
+
+            _animationController.Attack();
+        }
 
         private void Die()
         {

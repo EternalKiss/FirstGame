@@ -8,6 +8,8 @@ namespace FirstGame.Players
         private Health _health;
         private PlayerCombatController _combatController;
 
+        private bool _isShielded;
+
         public void Initialize(Health health, PlayerCombatController combatController, float startHealth)
         {
             _health = health;
@@ -16,9 +18,19 @@ namespace FirstGame.Players
             _health.Initialize(startHealth);
         }
 
+        public void SetShielded(bool isShielded)
+        {
+            _isShielded = isShielded;
+        }
+
         public void ReceiveDamage(float damage)
         {
             if (damage <= 0)
+            {
+                return;
+            }
+
+            if (_isShielded)
             {
                 return;
             }

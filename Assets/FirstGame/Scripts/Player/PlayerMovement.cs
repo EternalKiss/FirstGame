@@ -10,6 +10,20 @@ namespace FirstGame.Players
         private IMovable _movable;
         private IRotatable _rotatable;
         private AnimationController _animationController;
+        private float _baseSpeed;
+
+        public float MoveSpeed => _moveSpeed;
+        public float BaseMoveSpeed => _baseSpeed;
+
+        private void Awake()
+        {
+            _baseSpeed = _moveSpeed;
+        }
+
+        public void SetMoveSpeed(float speed)
+        {
+            _moveSpeed = speed;
+        }
 
         public void Initialize(AnimationController animator)
         {

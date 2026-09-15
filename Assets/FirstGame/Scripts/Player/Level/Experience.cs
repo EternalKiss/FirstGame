@@ -24,12 +24,6 @@ namespace FirstGame.Players.Level
             _requiredXpForNextLevel = _baseRequiredXp;
         }
 
-        private void Start()
-        {
-            OnExperienceChanged?.Invoke(_currentXp, _requiredXpForNextLevel);
-            OnLevelUp?.Invoke(_currentLevel);
-        }
-
         public void AddExperience(float amount)
         {
             if (amount <= 0f)

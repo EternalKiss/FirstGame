@@ -10,12 +10,10 @@ namespace FirstGame.Players
         [SerializeField] private float _magnetRadius = 5f;
         [SerializeField] private float _magnetSpeed = 14f;
         [SerializeField] private float _rotateSpeed = 120f;
-        [SerializeField] private float _searchInterval = 0.15f;
 
         private readonly Collider[] _hitColliders = new Collider[50];
         private Transform _playerTransform;
         private Inventory _inventory;
-        private float _nextSearchTime;
 
         private void Awake()
         {
@@ -25,48 +23,37 @@ namespace FirstGame.Players
 
         private void Update()
         {
-            Vector3 playerPos = _playerTransform.position;
-            Vector3 targetPos = playerPos + Vector3.up * 0.5f;
-
-            HandleLootScanning(playerPos);
-            HandleLootProcessing(playerPos, targetPos, Time.deltaTime);
+            LootScanning();
         }
 
-        private void HandleLootScanning(Vector3 playerPos)
+        private void LootScanning()
         {
-            if (Time.time < _nextSearchTime) return;
-
-            _nextSearchTime = Time.time + _searchInterval;
+            Vector3 playerPos = _playerTransform.position;
+            Vector3 targetPos = playerPos + Vector3.up * 0.5f;
+            float deltaTime = Time.deltaTime;
 
             int lootCount = Physics.OverlapSphereNonAlloc(playerPos, _magnetRadius, _hitColliders, _lootLayer);
 
             for (int i = 0; i < lootCount; i++)
             {
                 Collider col = _hitColliders[i];
-                if (col == null) continue;
 
-                if (col.TryGetComponent(out LootPiece loot))
+                if (col == null)
                 {
-                    if (loot.IsCollectable && !loot.IsMagnetized)
-                    {
-                        loot.Magnetize();
-                    }
+                    continue;
                 }
-            }
-        }
 
-        private void HandleLootProcessing(Vector3 playerPos, Vector3 targetPos, float deltaTime)
-        {
-            int activeLootCount = Physics.OverlapSphereNonAlloc(playerPos, _magnetRadius, _hitColliders, _lootLayer);
-            for (int i = 0; i < activeLootCount; i++)
-            {
-                Collider col = _hitColliders[i];
-                if (col == null) continue;
-
-                if (col.TryGetComponent(out LootPiece loot))
+                if (col.TryGetComponent(out LootPiece loot) == false)
                 {
-                    ProcessSingleLoot(loot, playerPos, targetPos, deltaTime);
+                    continue;
                 }
+
+                if (loot.IsCollectable && loot.IsMagnetized == false)
+                {
+                    loot.Magnetize();
+                }
+
+                ProcessSingleLoot(loot, playerPos, targetPos, deltaTime);
             }
         }
 

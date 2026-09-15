@@ -15,11 +15,19 @@ namespace FirstGame.Players
         private DamageDealer _damageDealer;
         private IRotatable _rotatable;
         private float _damage;
+        private float _attackInterval;
+        private float _nextAttackTime;
         private bool _isAttacking;
+        private bool _ignoreAttackEvents;
+
+        public void SetIgnoreAttackEvents(bool ignore)
+        {
+            _ignoreAttackEvents = ignore;
+        }
 
         private void Update()
         {
-            if (_isAttacking && _damageDealer.CanAttack)
+            if (_isAttacking && Time.time >= _nextAttackTime)
             {
                 _isAttacking = false;
             }
@@ -38,19 +46,29 @@ namespace FirstGame.Players
             _animationController = animationController;
             _damageDealer = damageDealer;
             _damage = damage;
+            _attackInterval = attackInterval;
 
             _rotatable = GetComponent<IRotatable>();
 
-            _damageDealer.InitializeCooldown(attackInterval);
-
-            _animationController.SynchronizeAnimationSpeed(attackInterval, AnimationController.AttackTrigger);
+            _animationController.SynchronizeAnimationSpeed(_attackInterval, AnimationController.AttackTrigger);
             _animationController.AddAttackEventViaCode(AnimationController.AttackTrigger, AnimationController.AttackEventMethodName, 0.55f);
+        }
+
+        public void SetAttackInterval(float newInterval)
+        {
+            _attackInterval = newInterval;
+
+            _animationController.SynchronizeAnimationSpeed(_attackInterval, AnimationController.AttackTrigger);
         }
 
         private void RotateTowardsClosestTarget()
         {
             var targets = _targetDetector.TargetsInRange;
-            if (targets == null || targets.Count == 0) return;
+
+            if (targets == null || targets.Count == 0)
+            {
+                return;
+            }
 
             if (targets[0] is Component targetComp && targetComp != null)
             {
@@ -66,15 +84,21 @@ namespace FirstGame.Players
 
         public void OnAttackHitEvent()
         {
+            if (_ignoreAttackEvents)
+            {
+                return;
+            }
+
             var targets = _targetDetector.TargetsInRange;
             int targetsCount = targets.Count;
 
             for (int i = 0; i < targetsCount; i++)
             {
                 IDamageable target = targets[i];
+
                 if (target is UnityEngine.Object unityObj && unityObj != null)
                 {
-                    target.TakeDamage(_damage);
+                    _damageDealer.DealDamage(target, _damage);
                 }
             }
         }
@@ -83,7 +107,6 @@ namespace FirstGame.Players
         {
             _isAttacking = false;
             _animationController.ResetAttackTrigger();
-            _damageDealer.StopCooldown();
 
             if (_targetDetector.TargetsInRange == null || _targetDetector.TargetsInRange.Count == 0)
             {
@@ -96,7 +119,17 @@ namespace FirstGame.Players
 
         private void HandleCombatTick()
         {
+            if (_ignoreAttackEvents)
+            {
+                return;
+            }
+
             if (_isAttacking)
+            {
+                return;
+            }
+
+            if (Time.time < _nextAttackTime)
             {
                 return;
             }
@@ -107,20 +140,18 @@ namespace FirstGame.Players
             {
                 IDamageable primaryTarget = targets[0];
 
-                if (_damageDealer.Attack(primaryTarget, _damage))
+                _isAttacking = true;
+                _nextAttackTime = Time.time + _attackInterval;
+
+                if (primaryTarget is Component targetComp)
                 {
-                    _isAttacking = true;
-
-                    if (primaryTarget is Component targetComp)
+                    if (OnAttackStarted != null)
                     {
-                        if (OnAttackStarted != null)
-                        {
-                            OnAttackStarted.Invoke(targetComp);
-                        }
+                        OnAttackStarted.Invoke(targetComp);
                     }
-
-                    _animationController.Attack();
                 }
+
+                _animationController.Attack();
             }
             else
             {

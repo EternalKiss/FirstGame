@@ -18,5 +18,13 @@ namespace FirstGame.Players
                 _playerRoot.OnAttackHitEvent();
             }
         }
+
+        public void OnAbilityHitEvent()
+        {
+            if (_playerRoot != null)
+            {
+                _playerRoot.OnAbilityHitEvent();
+            }
+        }
     }
 }
