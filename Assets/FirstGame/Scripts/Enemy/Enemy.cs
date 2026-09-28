@@ -29,7 +29,7 @@ namespace FirstGame.Enemy
 
         public event Action<IDestructible> OnReadyToRelease;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             _damageDealer = GetComponent<DamageDealer>();
             _playerDetector = GetComponent<PlayerDetector>();

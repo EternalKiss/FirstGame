@@ -5,13 +5,11 @@ namespace FirstGame.Environment
 {
     public class TreeVisual : ResourceVisual
     {
-        [Header("Hit Animation Settings")]
         [SerializeField] private float _hitDuration = 0.4f;
         [SerializeField] private float _maxTiltAngle = 12f;
         [SerializeField] private float _wobbleSpeed = 4f;
 
-        [Header("Death Animation Settings")]
-        [SerializeField] private float _deathDuration = 0.8f;
+        [SerializeField] private float _deathDuration = 0.2f;
         [SerializeField] private float _fallAngle = 80f;
 
         private Quaternion _originalRotation;

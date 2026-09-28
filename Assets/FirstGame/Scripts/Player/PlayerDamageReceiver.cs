@@ -25,34 +25,18 @@ namespace FirstGame.Players
 
         public void ReceiveDamage(float damage)
         {
-            if (damage <= 0)
-            {
-                return;
-            }
-
-            if (_isShielded)
-            {
-                return;
-            }
+            if (damage <= 0f) return;
+            if (_isShielded) return;
 
             _health.TakeDamage(damage);
 
-            if (_health.CurrentHealth <= 0)
-            {
-                Die();
-            }
-            else
+            if (_health.CurrentHealth > 0f)
             {
                 if (_combatController != null)
                 {
                     _combatController.InterruptAttack();
                 }
             }
-        }
-
-        private void Die()
-        {
-            Destroy(gameObject);
         }
     }
 }

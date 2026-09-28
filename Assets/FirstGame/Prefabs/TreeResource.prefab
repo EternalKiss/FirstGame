@@ -205,5 +205,5 @@ MonoBehaviour:
   _hitDuration: 0.25
   _maxTiltAngle: 8
   _wobbleSpeed: 4
-  _deathDuration: 0.8
+  _deathDuration: 0.2
   _fallAngle: 80

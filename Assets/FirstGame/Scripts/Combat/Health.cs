@@ -12,6 +12,7 @@ namespace FirstGame.Combat
         public float CurrentHealth => _currentHealth;
 
         public event Action<float> HealthChanged;
+        public event Action Died;
 
         public void Initialize(float maxHealth)
         {
@@ -47,6 +48,11 @@ namespace FirstGame.Combat
             }
 
             HealthChanged?.Invoke(_currentHealth);
+
+            if (_currentHealth <= 0f)
+            {
+                Died?.Invoke();
+            }
         }
 
         public void Heal(float amount)

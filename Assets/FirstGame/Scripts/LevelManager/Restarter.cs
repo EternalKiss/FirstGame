@@ -8,14 +8,16 @@ namespace FirstGame.LevelManager
     {
         public async void RestartLevel()
         {
-            int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+            Time.timeScale = 1f;
 
+            int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(currentSceneIndex);
 
             while (!asyncLoad.isDone)
             {
                 await Task.Yield();
             }
+
         }
     }
 }

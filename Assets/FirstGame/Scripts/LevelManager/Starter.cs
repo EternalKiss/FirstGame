@@ -24,6 +24,10 @@ namespace FirstGame.LevelManager
         [SerializeField] private LevelEndHandler _endLevelHandler;
         [SerializeField] private LevelProgressController _progressController;
         [SerializeField] private DayNightCycle _dayNightCycle;
+        [SerializeField] private LevelUpScreen _levelUpScreen;
+        [SerializeField] private SellScreen _sellScreen;
+        [SerializeField] private UpgradeScreen _upgradeScreen;
+        [SerializeField] private GameOverHandler _gameOverHandler;
         [SerializeField] private float _initialCorridorLength = 30f;
 
         private async void Start()
@@ -48,44 +52,60 @@ namespace FirstGame.LevelManager
                 spawnedPlayer = _playerSpawner.Spawn();
             }
 
-            LevelUpScreen levelUpScreen = FindObjectOfType<LevelUpScreen>();
-
-            if (levelUpScreen != null)
+            if (spawnedPlayer == null)
             {
-                Experience experience = spawnedPlayer.GetComponent<Experience>();
-                AbilitySlotController slotController = spawnedPlayer.GetComponent<AbilitySlotController>();
-                levelUpScreen.Initialize(experience, slotController);
+                return;
             }
 
-            if (spawnedPlayer != null)
+            Inventory inventory = spawnedPlayer.GetComponent<Inventory>();
+            Experience experience = spawnedPlayer.GetComponent<Experience>();
+            AbilitySlotController slotController = spawnedPlayer.GetComponent<AbilitySlotController>();
+
+            if (_levelUpScreen != null)
             {
-                if (_resourceCounter != null)
+                _levelUpScreen.Initialize(experience, slotController);
+            }
+
+            if (_resourceCounter != null)
+            {
+                _resourceCounter.Initialize(inventory);
+            }
+
+            if (_sellScreen != null)
+            {
+                _sellScreen.Initialize(inventory);
+            }
+
+            if (_upgradeScreen != null)
+            {
+                _upgradeScreen.Initialize(inventory, slotController);
+            }
+
+            if (_gameOverHandler != null)
+            {
+                _gameOverHandler.Initialize(spawnedPlayer);
+            }
+
+            _enemySpawner?.SetPlayerTarget(spawnedPlayer.transform);
+
+            if (_baseSpawner != null)
+            {
+                Vector3 initialBasePos = spawnedPlayer.transform.position + Vector3.forward * _initialCorridorLength;
+                var initialBase = _baseSpawner.SpawnBase(initialBasePos);
+
+                if (_gridSpawnManager != null)
                 {
-                    Inventory playerInventory = spawnedPlayer.GetComponent<Inventory>();
-                    _resourceCounter.Initialize(playerInventory);
+                    _gridSpawnManager.GenerateLevel(initialBase.EntrancePosition, Vector3.back, _initialCorridorLength);
                 }
 
-                _enemySpawner?.SetPlayerTarget(spawnedPlayer.transform);
-
-                if (_baseSpawner != null)
+                if (_progressController != null)
                 {
-                    Vector3 initialBasePos = spawnedPlayer.transform.position + Vector3.forward * _initialCorridorLength;
-                    var initialBase = _baseSpawner.SpawnBase(initialBasePos);
-
-                    if (_gridSpawnManager != null)
-                    {
-                        _gridSpawnManager.GenerateLevel(initialBase.EntrancePosition, Vector3.back, _initialCorridorLength);
-                    }
-
-                    if (_progressController != null)
-                    {
-                        _progressController.Initialize(_baseSpawner, _gridSpawnManager);
-                        _progressController.SetInitialBase(initialBase);
-                        _endLevelHandler?.Initialize(_progressController);
-                    }
-
-                    _dayNightCycle?.StartDay();
+                    _progressController.Initialize(_baseSpawner, _gridSpawnManager);
+                    _progressController.SetInitialBase(initialBase);
+                    _endLevelHandler?.Initialize(_progressController);
                 }
+
+                _dayNightCycle?.StartDay();
             }
         }
     }

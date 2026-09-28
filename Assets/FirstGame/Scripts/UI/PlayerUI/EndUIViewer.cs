@@ -6,7 +6,7 @@ namespace FirstGame.PlayerUI
 {
     public class EndUIViewer : MonoBehaviour
     {
-        [SerializeField] private Canvas _endUI;
+        [SerializeField] private GameObject _endUI;
         [SerializeField] private Button _restartButton;
         [SerializeField] private Button _continueButton;
         [SerializeField] private Button _exitButton;

@@ -5,13 +5,11 @@ namespace FirstGame.Environment
 {
     public class StoneVisual : ResourceVisual
     {
-        [Header("Hit Animation Settings")]
         [SerializeField] private float _hitDuration = 0.4f;
         [SerializeField] private float _maxTiltAngle = 12f;
         [SerializeField] private float _wobbleSpeed = 3f;
 
-        [Header("Death Animation Settings")]
-        [SerializeField] private float _deathDuration = 0.8f;
+        [SerializeField] private float _deathDuration = 0.2f;
         [SerializeField] private float _fallAngle = 80f;
 
         private readonly Quaternion _originalRotation = Quaternion.Euler(0f, 0f, 0f);

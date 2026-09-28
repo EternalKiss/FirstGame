@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace FirstGame.Players.Abilities
@@ -16,21 +17,37 @@ namespace FirstGame.Players.Abilities
         [SerializeField] private float _cooldown = 5f;
         [SerializeField] private float _activeDuration = 0f;
         [SerializeField] private bool _isUnlocked = false;
+        [SerializeField] private int _maxLevel = 5;
 
         private float _cooldownRemaining;
         private float _activeTimeRemaining;
+        private float _baseCooldown;
         private bool _isActive;
+        private int _currentLevel = 1;
 
         public AbilityTrigger Trigger => _trigger;
         public float Cooldown => _cooldown;
         public float CooldownRemaining => _cooldownRemaining;
+        public int CurrentLevel => _currentLevel;
+        public int MaxLevel => _maxLevel;
         public bool IsUnlocked => _isUnlocked;
+        public bool IsMaxLevel => _currentLevel >= _maxLevel;
         public bool IsActive => _isActive;
         public virtual bool UsesMeleeAnimation => false;
 
         public void Unlock() => _isUnlocked = true;
 
         public void SetCooldown(float newCooldown) => _cooldown = newCooldown;
+
+        public event Action<AbilityBase> Upgraded;
+
+        private void Awake()
+        {
+            _baseCooldown = _cooldown;
+            OnAwake();
+        }
+
+        protected virtual void OnAwake() { }
 
         public void Tick(float deltaTime)
         {
@@ -77,6 +94,23 @@ namespace FirstGame.Players.Abilities
             _isActive = false;
             _activeTimeRemaining = 0f;
             Deactivate();
+        }
+
+        public bool TryUpgrade()
+        {
+            if (IsMaxLevel) return false;
+
+            _currentLevel++;
+            ApplyLevelScaling();
+
+            Upgraded?.Invoke(this);
+            return true;
+        }
+
+        protected virtual void ApplyLevelScaling()
+        {
+            float multiplier = 1f + 0.15f * (_currentLevel - 1);
+            _cooldown = _baseCooldown / multiplier;
         }
 
         public virtual bool HasTargets() => true;

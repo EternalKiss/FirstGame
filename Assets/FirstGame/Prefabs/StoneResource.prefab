@@ -190,8 +190,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c44a82703a1c34549a8342e0772ca33e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitDuration: 0.4
+  _hitDuration: 0.25
   _maxTiltAngle: 10
   _wobbleSpeed: 3
-  _deathDuration: 0.8
+  _deathDuration: 0.2
   _fallAngle: 80
