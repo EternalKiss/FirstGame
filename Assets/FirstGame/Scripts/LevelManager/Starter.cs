@@ -2,6 +2,7 @@ using FirstGame.Loot;
 using FirstGame.ObjectPool;
 using FirstGame.Players;
 using FirstGame.Players.Abilities;
+using FirstGame.Players.Input;
 using FirstGame.Players.Inventore;
 using FirstGame.Players.Level;
 using FirstGame.PlayerUI;
@@ -21,13 +22,14 @@ namespace FirstGame.LevelManager
         [SerializeField] private TreeLootPiecePool _treeLootPool;
         [SerializeField] private LootDropHandler _lootDropHandler;
         [SerializeField] private ResourceCounter _resourceCounter;
-        [SerializeField] private LevelEndHandler _endLevelHandler;
         [SerializeField] private LevelProgressController _progressController;
         [SerializeField] private DayNightCycle _dayNightCycle;
         [SerializeField] private LevelUpScreen _levelUpScreen;
         [SerializeField] private SellScreen _sellScreen;
         [SerializeField] private UpgradeScreen _upgradeScreen;
         [SerializeField] private GameOverHandler _gameOverHandler;
+        [SerializeField] private Joystick _joystick;
+        [SerializeField] private GameCycleController _gameCycleController;
         [SerializeField] private float _initialCorridorLength = 30f;
 
         private async void Start()
@@ -55,6 +57,16 @@ namespace FirstGame.LevelManager
             if (spawnedPlayer == null)
             {
                 return;
+            }
+
+            if (_joystick != null)
+            {
+                PlayerInputReader inputReader = spawnedPlayer.GetComponent<PlayerInputReader>();
+
+                if (inputReader != null)
+                {
+                    inputReader.SetJoystick(_joystick);
+                }
             }
 
             Inventory inventory = spawnedPlayer.GetComponent<Inventory>();
@@ -102,10 +114,14 @@ namespace FirstGame.LevelManager
                 {
                     _progressController.Initialize(_baseSpawner, _gridSpawnManager);
                     _progressController.SetInitialBase(initialBase);
-                    _endLevelHandler?.Initialize(_progressController);
                 }
 
                 _dayNightCycle?.StartDay();
+
+                if (_gameCycleController != null)
+                {
+                    _gameCycleController.SetPlayerPosition(spawnedPlayer.transform);
+                }
             }
         }
     }

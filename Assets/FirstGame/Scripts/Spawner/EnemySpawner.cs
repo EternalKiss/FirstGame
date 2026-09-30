@@ -7,8 +7,11 @@ public class EnemySpawner : BasisSpawner<Enemy>
     [SerializeField] private float _startHealth = 100f;
     [SerializeField] private float _spawnInterval = 5f;
     [SerializeField] private Vector2 _spawnAreaRangeX = new Vector2(-15f, 15f);
-    [SerializeField] private Vector2 _spawnAreaRangeZ = new Vector2(10f, 25f); // Спавним чуть впереди игрока
+    [SerializeField] private Vector2 _spawnAreaRangeZ = new Vector2(10f, 25f);
 
+    private float _attackRange = 4f;
+    private float _scale = 1f;
+    private float _damage = 15f;
     private float _nextSpawnTime;
     private bool _canSpawn;
     private Transform _currentTarget;
@@ -75,7 +78,7 @@ public class EnemySpawner : BasisSpawner<Enemy>
             controller.enabled = true;
         }
 
-        enemy.Initialize(_startHealth);
+        enemy.Initialize(_startHealth, _attackRange, _damage, _scale);
 
         PlayerDetector detector = enemy.GetComponent<PlayerDetector>();
 

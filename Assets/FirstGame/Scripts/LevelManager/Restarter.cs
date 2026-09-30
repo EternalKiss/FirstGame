@@ -17,7 +17,6 @@ namespace FirstGame.LevelManager
             {
                 await Task.Yield();
             }
-
         }
     }
 }

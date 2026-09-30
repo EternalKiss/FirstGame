@@ -74,14 +74,17 @@ namespace FirstGame.Enemy
             }
         }
 
-        public void Initialize(float startHealth)
+        public void Initialize(float startHealth, float attackRange, float damage, float scale)
         {
             if (startHealth <= 0f)
             {
-                Debug.Log("Health is less or equal 0!");
+                Debug.LogWarning("Health is less or equal 0!");
             }
 
             _health.Initialize(startHealth);
+            _attackRange = attackRange;
+            _damage = damage;
+            transform.localScale = Vector3.one * scale;
         }
 
         public void TakeDamage(float damage)

@@ -1,5 +1,7 @@
 using FirstGame.Common;
+using FirstGame.Players;
 using FirstGame.PlayerUI;
+using System;
 using UnityEngine;
 
 namespace FirstGame.LevelManager
@@ -8,6 +10,7 @@ namespace FirstGame.LevelManager
     {
         [SerializeField] private EndUIViewer _endUIViewer;
         [SerializeField] private Restarter _restarter;
+        [SerializeField] private GameOverHandler _gameOverHandler;
 
         private readonly UniversalEventBinder _eventBinder = new UniversalEventBinder();
 
@@ -43,6 +46,13 @@ namespace FirstGame.LevelManager
 
         private void HandleContinue()
         {
+            if (_gameOverHandler == null) return;
+
+            if (_gameOverHandler.TryRevive())
+            {
+                return;
+            }
+
             if (_restarter != null) _restarter.RestartLevel();
         }
 

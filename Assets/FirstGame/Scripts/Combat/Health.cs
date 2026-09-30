@@ -53,6 +53,8 @@ namespace FirstGame.Combat
             {
                 Died?.Invoke();
             }
+
+            Debug.Log(_currentHealth);
         }
 
         public void Heal(float amount)
@@ -70,6 +72,16 @@ namespace FirstGame.Combat
             _currentHealth += amount;
             _currentHealth = CheckValidHealth();
 
+            HealthChanged?.Invoke(_currentHealth);
+        }
+
+        public void Revive(float amount)
+        {
+            float healthRevive = _maxHealth / amount;
+
+            _currentHealth = healthRevive;
+            _currentHealth = CheckValidHealth();
+            Debug.Log(_currentHealth);
             HealthChanged?.Invoke(_currentHealth);
         }
     }

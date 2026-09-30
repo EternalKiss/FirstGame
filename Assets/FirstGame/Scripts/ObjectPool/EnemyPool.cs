@@ -1,7 +1,9 @@
-using FirstGame.Enemy;
-using FirstGame.ObjectPool;
+using EnemyComponent = FirstGame.Enemy.Enemy;
 
-public class EnemyPool : GameObjectPool<Enemy>
+namespace FirstGame.ObjectPool
 {
-    
+    public class EnemyPool : GameObjectPool<EnemyComponent>
+    {
+
+    }
 }

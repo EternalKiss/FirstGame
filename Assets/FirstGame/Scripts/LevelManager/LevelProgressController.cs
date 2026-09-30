@@ -16,6 +16,7 @@ namespace FirstGame.LevelManager
         private PlayerBase _currentActiveBase;
         private PlayerBase _previousBase;
         private int _basesEnteredCount = 0;
+        private bool _isFinalBaseEntered;
 
         public event Action LevelCompleted;
 
@@ -43,16 +44,43 @@ namespace FirstGame.LevelManager
             _baseSpawner.BindBase(_currentActiveBase);
         }
 
+        public void StartNewCycle()
+        {
+            _basesEnteredCount = 0;
+            _previousBase = null;
+            _isFinalBaseEntered = false;
+
+            if (_currentActiveBase == null)
+            {
+                return;
+            }
+
+            Vector3 nextSpawnPos = BasePositionCalculator.CalculatePlacementPosition(
+                _currentActiveBase.ExitPosition,
+                _resourceCorridorLength,
+                _baseSpawner.BaseEntranceOffset
+            );
+
+            _currentActiveBase = _baseSpawner.SpawnBase(nextSpawnPos);
+            _baseSpawner.BindBase(_currentActiveBase);
+
+            if (_gridSpawnManager != null)
+            {
+                _gridSpawnManager.GenerateLevel(
+                    _currentActiveBase.EntrancePosition,
+                    Vector3.back,
+                    _resourceCorridorLength
+                );
+            }
+        }
+
         private void HandleBaseEntered()
         {
             _basesEnteredCount++;
 
             if (_basesEnteredCount >= _maxBasesPerLevel)
             {
-                if (_currentActiveBase != null) _baseSpawner.UnbindBase(_currentActiveBase);
-                if (_previousBase != null) _baseSpawner.UnbindBase(_previousBase);
-
-                LevelCompleted?.Invoke();
+                _isFinalBaseEntered = true;
                 return;
             }
 
@@ -69,12 +97,29 @@ namespace FirstGame.LevelManager
 
             if (_gridSpawnManager != null)
             {
-                _gridSpawnManager.GenerateLevel(_currentActiveBase.EntrancePosition, Vector3.back, _resourceCorridorLength);
+                _gridSpawnManager.GenerateLevel(
+                    _currentActiveBase.EntrancePosition,
+                    Vector3.back,
+                    _resourceCorridorLength
+                );
             }
         }
 
         private void HandleBaseExited()
         {
+            if (_isFinalBaseEntered)
+            {
+                _isFinalBaseEntered = false;
+
+                if (_currentActiveBase != null)
+                {
+                    _baseSpawner.UnbindBase(_currentActiveBase);
+                }
+
+                LevelCompleted?.Invoke();
+                return;
+            }
+
             if (_basesEnteredCount > 1 && _previousBase != null)
             {
                 _baseSpawner.DestroyBase(_previousBase);

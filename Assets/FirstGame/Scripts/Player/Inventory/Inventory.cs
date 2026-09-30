@@ -46,7 +46,7 @@ namespace FirstGame.Players.Inventore
             if (amount < 0) return false;
             if(amount > _goldCount) return false;
 
-            _goldCount = amount;
+            _goldCount -= amount;
             GoldAdded?.Invoke(_goldCount);
 
             return true;

@@ -8,6 +8,7 @@ namespace FirstGame.PlayerUI
     {
         [SerializeField] private TextMeshProUGUI _stoneCount;
         [SerializeField] private TextMeshProUGUI _treeCount;
+        [SerializeField] private TextMeshProUGUI _goldCount;
 
         private Inventory _inventory;
 
@@ -19,6 +20,7 @@ namespace FirstGame.PlayerUI
             {
                 _inventory.StoneAdded += UpdateStoneCount;
                 _inventory.TreeAdded += UpdateTreeCount;
+                _inventory.GoldAdded += UpdateGoldCount;
 
                 UpdateStoneCount(_inventory.StoneCount);
                 UpdateTreeCount(_inventory.TreeCount);
@@ -31,6 +33,7 @@ namespace FirstGame.PlayerUI
             {
                 _inventory.StoneAdded -= UpdateStoneCount;
                 _inventory.TreeAdded -= UpdateTreeCount;
+                _inventory.GoldAdded -= UpdateGoldCount;
             }
         }
 
@@ -48,6 +51,14 @@ namespace FirstGame.PlayerUI
             {
                 _stoneCount.text = count.ToString();
             }
+        }
+
+        private void UpdateGoldCount(int count)
+        {
+            if( _goldCount != null)
+            {
+                _goldCount.text = count.ToString();
+            }    
         }
     }
 }

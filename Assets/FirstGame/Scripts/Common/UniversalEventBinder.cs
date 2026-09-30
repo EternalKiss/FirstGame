@@ -34,6 +34,5 @@ namespace FirstGame.Common
 
             _unbindActions.Clear();
         }
-
     }
 }

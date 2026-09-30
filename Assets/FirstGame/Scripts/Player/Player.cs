@@ -23,13 +23,7 @@ namespace FirstGame.Players
         private AbilityController _abilityController;
 
         public Health GetHealthComponent() => _health;
-        public bool IsAlive
-        {
-            get
-            {
-                return _health != null && _health.CheckValidHealth() > 0;
-            }
-        }
+        public bool IsAlive => _health != null && _health.CheckValidHealth() > 0;
 
         public void Initialize()
         {

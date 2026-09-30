@@ -22,22 +22,23 @@ namespace FirstGame.Enemy
 
         public void Move(Vector3 targetPosition, float attackDistance)
         {
-            Vector3 direction = (targetPosition - transform.position).normalized;
+            Vector3 offset = targetPosition - transform.position;
+            offset.y = 0f;
 
-            direction.y = 0;
+            float sqrDistance = offset.sqrMagnitude;
 
-            Vector3 newPosition = transform.position + direction * _speed * Time.deltaTime;
-
-            if (Vector3.Distance(transform.position, targetPosition) > attackDistance)
-            {
-                _rigidBody.MovePosition(newPosition);
-                _targetReached = false;
-            }
-            else
+            if (sqrDistance <= attackDistance * attackDistance)
             {
                 Stop();
                 _targetReached = true;
+                return;
             }
+
+            Vector3 direction = offset.normalized;
+            Vector3 newPosition = transform.position + direction * _speed * Time.deltaTime;
+
+            _rigidBody.MovePosition(newPosition);
+            _targetReached = false;
         }
 
         public void Stop()

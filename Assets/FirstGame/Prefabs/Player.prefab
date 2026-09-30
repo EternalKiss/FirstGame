@@ -34,6 +34,7 @@ GameObject:
   - component: {fileID: 3918999346537189578}
   - component: {fileID: 3138169983829591575}
   - component: {fileID: 2391296215040752343}
+  - component: {fileID: 6923983846613572114}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -331,6 +332,7 @@ MonoBehaviour:
   _cooldown: 3
   _activeDuration: 0
   _isUnlocked: 0
+  _maxLevel: 5
   _targetsLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -352,6 +354,7 @@ MonoBehaviour:
   _cooldown: 1
   _activeDuration: 0
   _isUnlocked: 0
+  _maxLevel: 5
   _speedMultiplier: 1.5
 --- !u!114 &6571199070710505572
 MonoBehaviour:
@@ -369,6 +372,7 @@ MonoBehaviour:
   _cooldown: 5
   _activeDuration: 0
   _isUnlocked: 0
+  _maxLevel: 5
   _healAmount: 50
   _healVfx: {fileID: 0}
 --- !u!114 &1465812803362723563
@@ -387,6 +391,7 @@ MonoBehaviour:
   _cooldown: 5
   _activeDuration: 2
   _isUnlocked: 0
+  _maxLevel: 5
   _attackSpeedMultiplier: 2
 --- !u!114 &3918999346537189578
 MonoBehaviour:
@@ -404,6 +409,7 @@ MonoBehaviour:
   _cooldown: 5
   _activeDuration: 0
   _isUnlocked: 0
+  _maxLevel: 5
   _chainLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -426,6 +432,7 @@ MonoBehaviour:
   _cooldown: 12
   _activeDuration: 3
   _isUnlocked: 0
+  _maxLevel: 5
   _shieldVisual: {fileID: 1455177751479136594}
 --- !u!114 &2391296215040752343
 MonoBehaviour:
@@ -440,6 +447,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxSlots: 4
+--- !u!114 &6923983846613572114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 157240593586097936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6aac109f759d7d4793133657828f310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _healthPercentRevive: 0.5
+  _reviveCount: 1
 --- !u!1 &157812605537746058
 GameObject:
   m_ObjectHideFlags: 0
