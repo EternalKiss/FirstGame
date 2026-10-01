@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1448611fdfa879c488e59954959636de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _joystick: {fileID: 0}
 --- !u!143 &2572781806979933515
 CharacterController:
   m_ObjectHideFlags: 0
@@ -333,6 +334,7 @@ MonoBehaviour:
   _activeDuration: 0
   _isUnlocked: 0
   _maxLevel: 5
+  _data: {fileID: 11400000, guid: 7bc1c9941e4a57b4aad043d74f96fd18, type: 2}
   _targetsLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -352,9 +354,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _trigger: 0
   _cooldown: 1
-  _activeDuration: 0
+  _activeDuration: 3
   _isUnlocked: 0
   _maxLevel: 5
+  _data: {fileID: 11400000, guid: 590f22f378027ba4a9a4663797693950, type: 2}
   _speedMultiplier: 1.5
 --- !u!114 &6571199070710505572
 MonoBehaviour:
@@ -369,10 +372,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _trigger: 0
-  _cooldown: 5
-  _activeDuration: 0
+  _cooldown: 10
+  _activeDuration: 3
   _isUnlocked: 0
   _maxLevel: 5
+  _data: {fileID: 11400000, guid: 2d4dc209427f20844b278b632746a02f, type: 2}
   _healAmount: 50
   _healVfx: {fileID: 0}
 --- !u!114 &1465812803362723563
@@ -392,6 +396,7 @@ MonoBehaviour:
   _activeDuration: 2
   _isUnlocked: 0
   _maxLevel: 5
+  _data: {fileID: 11400000, guid: c0cf463ca098d2e46ba45e6e0b578f40, type: 2}
   _attackSpeedMultiplier: 2
 --- !u!114 &3918999346537189578
 MonoBehaviour:
@@ -410,6 +415,7 @@ MonoBehaviour:
   _activeDuration: 0
   _isUnlocked: 0
   _maxLevel: 5
+  _data: {fileID: 11400000, guid: 23083b4695df0ac42be617fdb8eebd14, type: 2}
   _chainLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -433,6 +439,7 @@ MonoBehaviour:
   _activeDuration: 3
   _isUnlocked: 0
   _maxLevel: 5
+  _data: {fileID: 11400000, guid: 594229f1038a09d41b022ea5931adf3e, type: 2}
   _shieldVisual: {fileID: 1455177751479136594}
 --- !u!114 &2391296215040752343
 MonoBehaviour:
@@ -459,8 +466,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6aac109f759d7d4793133657828f310, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _healthPercentRevive: 0.5
-  _reviveCount: 1
+  _reviveHealthPercent: 0.5
+  _maxRevives: 1
 --- !u!1 &157812605537746058
 GameObject:
   m_ObjectHideFlags: 0

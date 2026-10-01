@@ -41,7 +41,7 @@ namespace FirstGame.PlayerUI
 
             if (_nameText != null)
             {
-                _nameText.text = ability.name;
+                _nameText.text = ability.DisplayName;
             }
 
             if (_levelText != null)

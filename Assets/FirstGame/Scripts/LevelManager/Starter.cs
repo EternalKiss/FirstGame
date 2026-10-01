@@ -6,6 +6,7 @@ using FirstGame.Players.Input;
 using FirstGame.Players.Inventore;
 using FirstGame.Players.Level;
 using FirstGame.PlayerUI;
+using FirstGame.Sound;
 using FirstGame.Spawner;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -30,6 +31,7 @@ namespace FirstGame.LevelManager
         [SerializeField] private GameOverHandler _gameOverHandler;
         [SerializeField] private Joystick _joystick;
         [SerializeField] private GameCycleController _gameCycleController;
+        [SerializeField] private AudioEventBridge _audioEventBridge;
         [SerializeField] private float _initialCorridorLength = 30f;
 
         private async void Start()
@@ -117,6 +119,11 @@ namespace FirstGame.LevelManager
                 }
 
                 _dayNightCycle?.StartDay();
+
+                if (_audioEventBridge != null)
+                {
+                    _audioEventBridge.BindToPlayer(spawnedPlayer);
+                }
 
                 if (_gameCycleController != null)
                 {

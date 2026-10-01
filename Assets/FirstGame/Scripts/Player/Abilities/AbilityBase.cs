@@ -18,6 +18,7 @@ namespace FirstGame.Players.Abilities
         [SerializeField] private float _activeDuration = 0f;
         [SerializeField] private bool _isUnlocked = false;
         [SerializeField] private int _maxLevel = 5;
+        [SerializeField] private AbilityData _data;
 
         private float _cooldownRemaining;
         private float _activeTimeRemaining;
@@ -34,6 +35,47 @@ namespace FirstGame.Players.Abilities
         public bool IsMaxLevel => _currentLevel >= _maxLevel;
         public bool IsActive => _isActive;
         public virtual bool UsesMeleeAnimation => false;
+
+        public AbilityData Data => _data;
+
+        public string DisplayName
+        {
+            get
+            {
+                if (_data != null)
+                {
+                    return _data.DisplayName;
+                }
+
+                return name;
+            }
+        }
+
+        public string Description
+        {
+            get
+            {
+                if (_data != null)
+                {
+                    return _data.Description;
+                }
+
+                return "";
+            }
+        }
+
+        public Sprite Icon
+        {
+            get
+            {
+                if (_data != null)
+                {
+                    return _data.Icon;
+                }
+
+                return null;
+            }
+        }
 
         public void Unlock() => _isUnlocked = true;
 

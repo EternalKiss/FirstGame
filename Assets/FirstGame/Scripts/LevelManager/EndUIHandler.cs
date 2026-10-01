@@ -1,6 +1,7 @@
 using FirstGame.Common;
 using FirstGame.Players;
 using FirstGame.PlayerUI;
+using FirstGame.Sound;
 using System;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace FirstGame.LevelManager
         [SerializeField] private EndUIViewer _endUIViewer;
         [SerializeField] private Restarter _restarter;
         [SerializeField] private GameOverHandler _gameOverHandler;
+        [SerializeField] private AudioService _audioService;
 
         private readonly UniversalEventBinder _eventBinder = new UniversalEventBinder();
 
@@ -41,12 +43,16 @@ namespace FirstGame.LevelManager
 
         private void HandleRestart()
         {
+            _audioService.PlayUIClick();
+
             if (_restarter != null) _restarter.RestartLevel();
         }
 
         private void HandleContinue()
         {
             if (_gameOverHandler == null) return;
+
+            _audioService.PlayUIClick();
 
             if (_gameOverHandler.TryRevive())
             {
@@ -58,6 +64,7 @@ namespace FirstGame.LevelManager
 
         private void HandleExit()
         {
+            _audioService.PlayUIClick();
             Application.Quit();
         }
     }

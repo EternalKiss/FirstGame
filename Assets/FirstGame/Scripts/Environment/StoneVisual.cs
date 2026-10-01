@@ -9,8 +9,9 @@ namespace FirstGame.Environment
         [SerializeField] private float _maxTiltAngle = 12f;
         [SerializeField] private float _wobbleSpeed = 3f;
 
-        [SerializeField] private float _deathDuration = 0.2f;
+        [SerializeField] private float _deathDuration = 0.1f;
         [SerializeField] private float _fallAngle = 80f;
+        [SerializeField] private AnimationCurve _scaleCurve;
 
         private readonly Quaternion _originalRotation = Quaternion.Euler(0f, 0f, 0f);
         private Vector3 _originalScale;
@@ -19,10 +20,28 @@ namespace FirstGame.Environment
         private bool _isDying = false;
         private Resource _resourceRoot;
 
+        private void Reset()
+        {
+            _scaleCurve = new AnimationCurve(
+                new Keyframe(0f, 1f),
+                new Keyframe(0.2f, 1.15f),
+                new Keyframe(1f, 0f)
+            );
+        }
+
         private void Awake()
         {
             _originalScale = transform.localScale;
             _resourceRoot = GetComponentInParent<Resource>();
+
+            if (_scaleCurve == null || _scaleCurve.length == 0)
+            {
+                _scaleCurve = new AnimationCurve(
+                    new Keyframe(0f, 1f),
+                    new Keyframe(0.2f, 1.15f),
+                    new Keyframe(1f, 0f)
+                );
+            }
         }
 
         private void OnEnable()
@@ -106,13 +125,16 @@ namespace FirstGame.Environment
                 float progress = elapsed / _deathDuration;
 
                 float t = progress * progress;
+                float scaleMultiplier = _scaleCurve.Evaluate(progress);
 
                 transform.localRotation = Quaternion.Slerp(_originalRotation, finalFallRotation, t);
-                transform.localScale = Vector3.Lerp(_originalScale, Vector3.zero, progress);
+                transform.localScale = _originalScale * scaleMultiplier;
                 transform.localPosition = Vector3.Lerp(Vector3.zero, targetPosition, progress);
 
                 yield return null;
             }
+
+            transform.localScale = Vector3.zero;
 
             if (_resourceRoot != null)
             {

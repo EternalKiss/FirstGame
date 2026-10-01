@@ -1,4 +1,5 @@
 using FirstGame.Combat;
+using System;
 using UnityEngine;
 
 namespace FirstGame.Players
@@ -9,6 +10,8 @@ namespace FirstGame.Players
         private PlayerCombatController _combatController;
 
         private bool _isShielded;
+
+        public event Action Damaged;
 
         public void Initialize(Health health, PlayerCombatController combatController, float startHealth)
         {
@@ -29,6 +32,7 @@ namespace FirstGame.Players
             if (_isShielded) return;
 
             _health.TakeDamage(damage);
+            Damaged?.Invoke();
 
             if (_health.CurrentHealth > 0f)
             {

@@ -20,6 +20,8 @@ namespace FirstGame.Players
         private bool _isAttacking;
         private bool _ignoreAttackEvents;
 
+        public event Action<Component> OnAttackHit;
+
         public void SetIgnoreAttackEvents(bool ignore)
         {
             _ignoreAttackEvents = ignore;
@@ -99,6 +101,11 @@ namespace FirstGame.Players
                 if (target is UnityEngine.Object unityObj && unityObj != null)
                 {
                     _damageDealer.DealDamage(target, _damage);
+
+                    if (i == 0 && target is Component targetComponent)
+                    {
+                        OnAttackHit?.Invoke(targetComponent);
+                    }
                 }
             }
         }

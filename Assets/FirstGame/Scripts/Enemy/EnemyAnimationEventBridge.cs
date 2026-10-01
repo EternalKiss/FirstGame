@@ -20,6 +20,8 @@ namespace FirstGame.Enemy
         {
             if (_enemyRoot != null)
             {
+                Debug.Log("[Enemy] OnAttackHitEvent, name=" + name);
+
                 _enemyRoot.OnAttackHitEvent();
             }
         }

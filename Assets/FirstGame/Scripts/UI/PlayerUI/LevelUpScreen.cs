@@ -79,15 +79,20 @@ namespace FirstGame.PlayerUI
 
             for (int index = 0; index < cards.Count; index++)
             {
+                AbilityCardView view = Instantiate(_cardPrefab, _cardsContainer);
                 AbilityCardData cardData = cards[index];
 
-                AbilityCardView view = Instantiate(_cardPrefab, _cardsContainer);
+                AbilityBase ability = cardData.Ability;
+                string displayName = ability.DisplayName;
+                string description = ability.Description;
+                Sprite icon = ability.Icon;
 
-                string displayName = cardData.Ability.name;
-                string description = _database.DefaultDescription;
-                Sprite icon = _database.DefaultIcon;
+                if (icon == null)
+                {
+                    icon = _database.DefaultIcon;
+                }
 
-                view.Setup(cardData.Ability, displayName, description, icon, HandleCardSelected);
+                view.Setup(ability, displayName, description, icon, HandleCardSelected);
                 _spawnedCards.Add(view);
             }
         }
