@@ -1,53 +1,80 @@
 using FirstGame.Interfaces;
-using System.Collections.Generic;
+using FirstGame.Sound;
 using UnityEngine;
 
 namespace FirstGame.Players.Abilities
 {
     public class AreaChopAbility : AbilityBase
     {
-        [SerializeField] private LayerMask _targetsLayer;
-        [SerializeField] private float _radius = 2.5f;
         [SerializeField] private float _damage = 25f;
 
-        private readonly Collider[] _hitColliders = new Collider[32];
-        private readonly List<IDamageable> _foundTargets = new List<IDamageable>(32);
+        private TargetDetector _targetDetector;
 
         public override bool UsesMeleeAnimation => true;
 
-        public override bool HasTargets()
+        protected override void OnAwake()
         {
-            int count = AbilityTargetFinder.FindTargetsInRadius(
-                transform.position,
-                _radius,
-                _targetsLayer,
-                _hitColliders,
-                _foundTargets);
-
-            return count > 0;
+            _targetDetector = GetComponent<TargetDetector>();
         }
 
-        protected override void Activate() { }
+        public override bool HasTargets()
+        {
+            if (_targetDetector == null)
+            {
+                return false;
+            }
+
+            return _targetDetector.TargetsInRange.Count > 0;
+        }
+
+        protected override void Activate()
+        {
+        }
 
         public override void OnApplyDamage()
         {
-            int count = AbilityTargetFinder.FindTargetsInRadius(
-                transform.position,
-                _radius,
-                _targetsLayer,
-                _hitColliders,
-                _foundTargets);
+            if (_targetDetector == null)
+            {
+                return;
+            }
+
+            if (AudioService.Instance != null)
+            {
+                AudioService.Instance.PlayAreaChop();
+            }
+
+            var targets = _targetDetector.TargetsInRange;
+            int count = targets.Count;
 
             for (int index = 0; index < count; index++)
             {
-                _foundTargets[index].TakeDamage(_damage);
+                IDamageable damageable = targets[index];
+
+                if (damageable == null)
+                {
+                    continue;
+                }
+
+                if (damageable.IsAlive == false)
+                {
+                    continue;
+                }
+
+                damageable.TakeDamage(_damage);
+
+                if (index == 0)
+                {
+                    OnImpact(damageable);
+                }
             }
         }
 
-        private void OnDrawGizmosSelected()
+        public override void OnImpact(IDamageable target)
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, _radius);
+            if (AudioService.Instance != null)
+            {
+                AudioService.Instance.PlayHitOnTarget(target);
+            }
         }
     }
 }

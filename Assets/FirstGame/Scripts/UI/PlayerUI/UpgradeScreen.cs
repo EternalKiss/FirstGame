@@ -19,11 +19,6 @@ namespace FirstGame.PlayerUI
 
         private readonly List<AbilityUpgradeRow> _spawnedRows = new List<AbilityUpgradeRow>(4);
 
-        private void Awake()
-        {
-            if (_rootPanel != null) _rootPanel.SetActive(false);
-        }
-
         private void OnDestroy()
         {
             if (_inventory != null)
@@ -63,7 +58,7 @@ namespace FirstGame.PlayerUI
 
             int cost = GetUpgradeCost(ability);
 
-            if(_inventory.TrySpendGold(cost) == false) return;
+            if (_inventory.TrySpendGold(cost) == false) return;
 
             ability.TryUpgrade();
 
@@ -103,6 +98,7 @@ namespace FirstGame.PlayerUI
             {
                 if (_spawnedRows[index] != null)
                 {
+                    _spawnedRows[index].gameObject.SetActive(false);
                     Destroy(_spawnedRows[index].gameObject);
                 }
             }

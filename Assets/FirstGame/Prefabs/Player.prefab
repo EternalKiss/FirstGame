@@ -335,10 +335,6 @@ MonoBehaviour:
   _isUnlocked: 0
   _maxLevel: 5
   _data: {fileID: 11400000, guid: 7bc1c9941e4a57b4aad043d74f96fd18, type: 2}
-  _targetsLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  _radius: 2.5
   _damage: 50
 --- !u!114 &3973268476729687922
 MonoBehaviour:
@@ -419,7 +415,7 @@ MonoBehaviour:
   _chainLayer:
     serializedVersion: 2
     m_Bits: 64
-  _damage: 100
+  _damage: 80
   _chainRadius: 3
   _maxChains: 3
 --- !u!114 &3138169983829591575

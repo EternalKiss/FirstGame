@@ -1,3 +1,5 @@
+using FirstGame.Environment;
+using FirstGame.Interfaces;
 using UnityEngine;
 
 namespace FirstGame.Sound
@@ -16,6 +18,7 @@ namespace FirstGame.Sound
 
         [Header("Enemy")]
         [SerializeField] private AudioClip _enemyDeathClip;
+        [SerializeField] private AudioClip _enemyHitClip;
 
         [Header("World")]
         [SerializeField] private AudioClip _nightStartClip;
@@ -25,6 +28,10 @@ namespace FirstGame.Sound
         [SerializeField] private AudioClip _stoneHitClip;
         [SerializeField] private AudioClip _treeHitClip;
 
+        [Header("Ability")]
+        [SerializeField] private AudioClip _areaChopClip;
+        [SerializeField] private AudioClip _chainHitClip;
+
         [Header("Loot")]
         [SerializeField] private AudioClip _lootPickupClip;
 
@@ -33,7 +40,7 @@ namespace FirstGame.Sound
 
         private void Awake()
         {
-            if(Instance == null)
+            if (Instance == null)
             {
                 Instance = this;
             }
@@ -81,6 +88,11 @@ namespace FirstGame.Sound
             Play(_enemyDeathClip);
         }
 
+        public void PlayEnemyHit()
+        {
+            Play(_enemyHitClip);
+        }
+
         public void PlayNightStart()
         {
             Play(_nightStartClip);
@@ -101,12 +113,43 @@ namespace FirstGame.Sound
             Play(_uiClickClip);
         }
 
+        public void PlayAreaChop()
+        {
+            Play(_areaChopClip);
+        }
+
+        public void PlayChainHit()
+        {
+            Play(_chainHitClip);
+        }
+
+        public void PlayHitOnTarget(IDamageable target)
+        {
+            if (target is not Component component)
+            {
+                return;
+            }
+
+            if (component.GetComponentInChildren<StoneVisual>() != null)
+            {
+                PlayStoneHit();
+                return;
+            }
+
+            if (component.GetComponentInChildren<TreeVisual>() != null)
+            {
+                PlayTreeHit();
+                return;
+            }
+
+            PlayEnemyHit();
+        }
+
         private void Play(AudioClip clip)
         {
             if (clip == null) return;
             if (_sfxSource == null) return;
 
-            Debug.Log("[Audio] Play: " + clip.name);
             _sfxSource.PlayOneShot(clip);
         }
     }

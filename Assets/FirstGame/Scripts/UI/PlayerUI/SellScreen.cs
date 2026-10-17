@@ -19,7 +19,6 @@ namespace FirstGame.PlayerUI
 
         private void Awake()
         {
-            if (_rootPanel != null) _rootPanel.SetActive(false);
             if (_sellButton != null) _sellButton.onClick.AddListener(HandleSell);
         }
 

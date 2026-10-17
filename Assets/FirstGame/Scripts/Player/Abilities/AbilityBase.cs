@@ -1,3 +1,4 @@
+using FirstGame.Interfaces;
 using System;
 using UnityEngine;
 
@@ -160,6 +161,7 @@ namespace FirstGame.Players.Abilities
         protected abstract void Activate();
 
         protected virtual void Deactivate() { }
+        public virtual void OnImpact(IDamageable target) { }
 
         public virtual void OnApplyDamage() { }
     }

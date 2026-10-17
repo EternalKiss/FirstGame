@@ -1,3 +1,4 @@
+using FirstGame.Environment.Ground;
 using FirstGame.Loot;
 using FirstGame.ObjectPool;
 using FirstGame.Players;
@@ -8,6 +9,7 @@ using FirstGame.Players.Level;
 using FirstGame.PlayerUI;
 using FirstGame.Sound;
 using FirstGame.Spawner;
+using FirstGame.Base;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -18,7 +20,6 @@ namespace FirstGame.LevelManager
         [SerializeField] private PlayerSpawner _playerSpawner;
         [SerializeField] private EnemySpawner _enemySpawner;
         [SerializeField] private BaseSpawner _baseSpawner;
-        [SerializeField] private GridSpawnManager _gridSpawnManager;
         [SerializeField] private StoneLootPiecePool _stoneLootPool;
         [SerializeField] private TreeLootPiecePool _treeLootPool;
         [SerializeField] private LootDropHandler _lootDropHandler;
@@ -29,9 +30,12 @@ namespace FirstGame.LevelManager
         [SerializeField] private SellScreen _sellScreen;
         [SerializeField] private UpgradeScreen _upgradeScreen;
         [SerializeField] private GameOverHandler _gameOverHandler;
+        [SerializeField] private GridSpawnManager _gridSpawnManager;
         [SerializeField] private Joystick _joystick;
         [SerializeField] private GameCycleController _gameCycleController;
         [SerializeField] private AudioEventBridge _audioEventBridge;
+        [SerializeField] private PlayerFollower _groundFollowPlayer;
+        [SerializeField] private PlayerFollowerCorridor _followerCorridor;
         [SerializeField] private float _initialCorridorLength = 30f;
 
         private async void Start()
@@ -61,6 +65,11 @@ namespace FirstGame.LevelManager
                 return;
             }
 
+            if (_followerCorridor != null && _baseSpawner != null)
+            {
+                _followerCorridor.Initialize(spawnedPlayer.transform);
+            }
+
             if (_joystick != null)
             {
                 PlayerInputReader inputReader = spawnedPlayer.GetComponent<PlayerInputReader>();
@@ -69,6 +78,11 @@ namespace FirstGame.LevelManager
                 {
                     inputReader.SetJoystick(_joystick);
                 }
+            }
+
+            if (_groundFollowPlayer != null)
+            {
+                _groundFollowPlayer.SetTarget(spawnedPlayer.transform);
             }
 
             Inventory inventory = spawnedPlayer.GetComponent<Inventory>();
@@ -107,27 +121,21 @@ namespace FirstGame.LevelManager
                 Vector3 initialBasePos = spawnedPlayer.transform.position + Vector3.forward * _initialCorridorLength;
                 var initialBase = _baseSpawner.SpawnBase(initialBasePos);
 
-                if (_gridSpawnManager != null)
-                {
-                    _gridSpawnManager.GenerateLevel(initialBase.EntrancePosition, Vector3.back, _initialCorridorLength);
-                }
-
                 if (_progressController != null)
                 {
                     _progressController.Initialize(_baseSpawner, _gridSpawnManager);
-                    _progressController.SetInitialBase(initialBase);
+                    _progressController.SetInitialBase(initialBase, spawnedPlayer.transform.position);
                 }
 
                 _dayNightCycle?.StartDay();
 
-                if (_audioEventBridge != null)
-                {
-                    _audioEventBridge.BindToPlayer(spawnedPlayer);
-                }
+                if (_audioEventBridge != null) _audioEventBridge.BindToPlayer(spawnedPlayer);
 
-                if (_gameCycleController != null)
+                if (_gameCycleController != null) _gameCycleController.SetPlayerPosition(spawnedPlayer.transform);
+
+                if (_followerCorridor != null)
                 {
-                    _gameCycleController.SetPlayerPosition(spawnedPlayer.transform);
+                    _followerCorridor.Initialize(spawnedPlayer.transform);
                 }
             }
         }
