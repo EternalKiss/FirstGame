@@ -135,7 +135,7 @@ namespace FirstGame.LevelManager
 
                 if (_followerCorridor != null)
                 {
-                    _followerCorridor.Initialize(spawnedPlayer.transform);
+                    _followerCorridor.Initialize(spawnedPlayer.transform                                                                                                                                                                                    );
                 }
             }
         }

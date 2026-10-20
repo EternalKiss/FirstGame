@@ -35,6 +35,7 @@ GameObject:
   - component: {fileID: 3138169983829591575}
   - component: {fileID: 2391296215040752343}
   - component: {fileID: 6923983846613572114}
+  - component: {fileID: 6708117316620331507}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -464,6 +465,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _reviveHealthPercent: 0.5
   _maxRevives: 1
+--- !u!65 &6708117316620331507
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 157240593586097936}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 2.070147, z: 1.144204}
+  m_Center: {x: 0, y: 1.0497787, z: -0.07210207}
 --- !u!1 &157812605537746058
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,7 +497,7 @@ GameObject:
   - component: {fileID: 3981227141161025545}
   - component: {fileID: 5221392890400107267}
   - component: {fileID: 5133437408202649273}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: TimerText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -610,7 +632,7 @@ GameObject:
   - component: {fileID: 1210393952202400536}
   - component: {fileID: 1502086209334262086}
   - component: {fileID: 6007401694338528534}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: LevelText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -839,7 +861,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5064320255309072711}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: TimerRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -880,7 +902,7 @@ GameObject:
   - component: {fileID: 818056814742109508}
   - component: {fileID: 4397191097183719607}
   - component: {fileID: 7084477499045209060}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: PlayerOverlayCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -930,7 +952,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!114 &6391985912185617829
 MonoBehaviour:
@@ -1013,7 +1035,7 @@ GameObject:
   - component: {fileID: 5416968911156552695}
   - component: {fileID: 7776739475531594783}
   - component: {fileID: 3590784952065939381}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: ClockFill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1134,7 +1156,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9168815125631907418}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: BottomSection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1172,7 +1194,7 @@ GameObject:
   - component: {fileID: 684446745796998804}
   - component: {fileID: 7879700855662526810}
   - component: {fileID: 8229553219610490249}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: TimerPlate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1415,7 +1437,7 @@ GameObject:
   - component: {fileID: 945397613188745148}
   - component: {fileID: 1640541133844805358}
   - component: {fileID: 6488269783485688295}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: ClockBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1489,7 +1511,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1046004050831894204}
   - component: {fileID: 5317928301356029048}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: ClockRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
