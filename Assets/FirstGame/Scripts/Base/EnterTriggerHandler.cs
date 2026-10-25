@@ -1,3 +1,4 @@
+using FirstGame.GameTutorial;
 using FirstGame.Players;
 using System;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace FirstGame.Base
             if (other.TryGetComponent<Player>(out Player player))
             {
                 EnteredInBase?.Invoke();
+                if (TutorialManager.Instance != null) TutorialManager.Instance.OnBaseEntered();
             }
         }
     }

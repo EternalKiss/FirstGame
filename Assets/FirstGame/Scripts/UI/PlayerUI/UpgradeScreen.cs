@@ -1,3 +1,4 @@
+using FirstGame.GameTutorial;
 using FirstGame.Players.Abilities;
 using FirstGame.Players.Inventore;
 using System.Collections.Generic;
@@ -61,6 +62,7 @@ namespace FirstGame.PlayerUI
             if (_inventory.TrySpendGold(cost) == false) return;
 
             ability.TryUpgrade();
+            if (TutorialManager.Instance != null) TutorialManager.Instance.OnUpgradePurchased();
 
             RefreshUI();
             RefreshUpgradeRows();

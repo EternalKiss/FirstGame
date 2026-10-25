@@ -29,11 +29,6 @@ namespace FirstGame.LevelManager
                 callback => _endUIViewer.ContinueButtonPressed += callback,
                 callback => _endUIViewer.ContinueButtonPressed -= callback,
                 HandleContinue);
-
-            _eventBinder.Bind(
-                callback => _endUIViewer.ExitButtonPressed += callback,
-                callback => _endUIViewer.ExitButtonPressed -= callback,
-                HandleExit);
         }
 
         private void OnDisable()
@@ -60,12 +55,6 @@ namespace FirstGame.LevelManager
             }
 
             if (_restarter != null) _restarter.RestartLevel();
-        }
-
-        private void HandleExit()
-        {
-            _audioService.PlayUIClick();
-            Application.Quit();
         }
     }
 }

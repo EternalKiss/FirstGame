@@ -1,6 +1,7 @@
-using UnityEngine;
+using FirstGame.GameTutorial;
 using FirstGame.Players;
 using FirstGame.Players.Input;
+using UnityEngine;
 
 public class PlayerInputReader : MonoBehaviour
 {
@@ -16,15 +17,8 @@ public class PlayerInputReader : MonoBehaviour
         _player = GetComponent<Player>();
     }
 
-    private void OnEnable()
-    {
-        _playerInput.Enable();
-    }
-
-    private void OnDisable()
-    {
-        _playerInput.Disable();
-    }
+    private void OnEnable() => _playerInput.Enable();
+    private void OnDisable() => _playerInput.Disable();
 
     public void SetJoystick(Joystick joystick)
     {
@@ -33,14 +27,20 @@ public class PlayerInputReader : MonoBehaviour
 
     private void Update()
     {
-        Vector2 direction = _playerInput.Game.Move.ReadValue<Vector2>();
+        Vector2 keyboardInput = _playerInput.Game.Move.ReadValue<Vector2>();
+        Vector2 joystickInput = _joystick != null ? _joystick.Direction : Vector2.zero;
 
-        if (_joystick != null && _joystick.Direction.sqrMagnitude > 0.01f)
-        {
-            direction = _joystick.Direction;
-        }
+        Vector2 direction = keyboardInput.sqrMagnitude > 0.01f ? keyboardInput : joystickInput;
 
         _inputDirection = direction;
         _player.Move(_inputDirection);
+
+        if (_inputDirection.sqrMagnitude > 0.01f)
+        {
+            if (TutorialManager.Instance != null)
+            {
+                TutorialManager.Instance.OnPlayerMoved();
+            }
+        }
     }
 }

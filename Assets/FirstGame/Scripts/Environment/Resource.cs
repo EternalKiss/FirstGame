@@ -1,7 +1,8 @@
-using UnityEngine;
-using FirstGame.Interfaces;
 using FirstGame.Combat;
+using FirstGame.GameTutorial;
+using FirstGame.Interfaces;
 using System;
+using UnityEngine;
 
 namespace FirstGame.Environment
 {
@@ -54,6 +55,7 @@ namespace FirstGame.Environment
             }
             else
             {
+                if (TutorialManager.Instance != null) TutorialManager.Instance.OnTreeChopped();
                 Die();
             }
         }

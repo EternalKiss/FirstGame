@@ -132,11 +132,6 @@ namespace FirstGame.LevelManager
                 if (_audioEventBridge != null) _audioEventBridge.BindToPlayer(spawnedPlayer);
 
                 if (_gameCycleController != null) _gameCycleController.SetPlayerPosition(spawnedPlayer.transform);
-
-                if (_followerCorridor != null)
-                {
-                    _followerCorridor.Initialize(spawnedPlayer.transform                                                                                                                                                                                    );
-                }
             }
         }
     }

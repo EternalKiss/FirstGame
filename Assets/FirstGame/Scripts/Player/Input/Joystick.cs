@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -13,17 +11,8 @@ namespace FirstGame.Players.Input
         [SerializeField] private float _deadZone = 0.1f;
 
         private Vector2 _direction;
-        private Vector2 _backgroundCenter;
 
         public Vector2 Direction => _direction;
-
-        private void Awake()
-        {
-            if (_background != null)
-            {
-                _backgroundCenter = _background.anchoredPosition;
-            }
-        }
 
         public void OnPointerDown(PointerEventData eventData)
         {
@@ -48,7 +37,9 @@ namespace FirstGame.Players.Input
                 return;
             }
 
-            Vector2 clamped = Vector2.ClampMagnitude(localPoint, _radius);
+            Vector2 rectCenter = _background.rect.size * (new Vector2(0.5f, 0.5f) - _background.pivot);
+            Vector2 pointFromCenter = localPoint - rectCenter;
+            Vector2 clamped = Vector2.ClampMagnitude(pointFromCenter, _radius);
 
             _handle.anchoredPosition = clamped;
 
