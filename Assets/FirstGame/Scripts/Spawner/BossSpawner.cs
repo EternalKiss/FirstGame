@@ -1,4 +1,5 @@
 using FirstGame.Combat;
+using FirstGame.Enemy;
 using FirstGame.ObjectPool;
 using System;
 using UnityEngine;
@@ -18,13 +19,18 @@ namespace FirstGame.Spawner
 
         public event Action BossDied;
 
-        public void Spawn(float cycleMultiplier, Vector3 spawnPosition)
+        public void Spawn(float cycleMultiplier, Vector3 spawnPosition, Transform playerTarget)
         {
             _currentBoss = _enemyPool.Get();
             _currentBoss.transform.position = spawnPosition;
             _currentBoss.transform.rotation = Quaternion.identity;
 
             _currentBoss.Initialize(_startHealth * cycleMultiplier, _attackRange, _damage * cycleMultiplier, _scale);
+
+            if (_currentBoss.TryGetComponent(out PlayerDetector detector))
+            {
+                detector.SetTarget(playerTarget);
+            }
 
             Health bossHealth = _currentBoss.GetHealthComponent();
 

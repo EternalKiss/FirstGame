@@ -50,12 +50,12 @@ namespace FirstGame.LevelManager
 
         private void SpawnBoss()
         {
-            if(_bossSpawner != null)
+            if (_bossSpawner != null && _playerTransform != null)
             {
                 float multiplier = 1f + (_cycleCount - 1) * _cycleMultiplier;
                 Vector3 spawnPosition = _playerTransform.position + Vector3.forward * _bossDistanceSpawn;
 
-                _bossSpawner.Spawn(multiplier, spawnPosition);
+                _bossSpawner.Spawn(multiplier, spawnPosition, _playerTransform);
             }
         }
 
